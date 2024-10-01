@@ -1,0 +1,56 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+*.whl
+*.DS_Store
+
+# TypeScript
+*.tsbuildinfo
+*.js.map
+*.d.ts
+
+# Docker
+# Mantener Dockerfile y docker-compose.yml
+# Ignorar archivos temporales o específicos del entorno
+.docker/
+*.dockerignore
+
+# Kubernetes
+*.kubeconfig
+*.yaml
+*.yml
+
+# React.js / Vue.js
+build/
+dist/
+*.log
+*.sublime-workspace
+*.sublime-project
+coverage/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
