@@ -13,7 +13,7 @@ const CardIcon = ({ title, icon }) => {
       />
       <label
         htmlFor={`react-${icon}`}
-        className="inline-flex items-center justify-center p-5 text-gray-700 bg-base-100 rounded-lg cursor-pointer peer-checked:bg-secondary hover:text-white peer-checked:text-white hover:bg-secondary w-28 h-full text-center shadow-md"
+        className="inline-flex items-center justify-center p-5 text-gray-500 bg-base-100 rounded-lg cursor-pointer peer-checked:bg-secondary hover:text-white peer-checked:text-white hover:bg-gray-400 w-28 h-full text-center shadow-md"
       >
         <div className="flex flex-col items-center justify-around h-full">
           {/*  <!-- Icon --> */}
