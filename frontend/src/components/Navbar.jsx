@@ -1,3 +1,5 @@
+import ThemeController from "./ThemeController";
+
 const Navbar = () => {
   return (
     <div className="navbar bg-base-100 w-full">
@@ -5,7 +7,7 @@ const Navbar = () => {
         <a className="btn btn-ghost text-xl">daisyUI</a>
       </div>
       <div className="flex-none gap-5">
-        <ul className="menu menu-horizontal px-1">
+        <ul className="menu menu-horizontal px-1 gap-2">
           <li>
             <a>Item 1</a>
           </li>
@@ -25,6 +27,7 @@ const Navbar = () => {
           <li>
             <a>Item 3</a>
           </li>
+          <ThemeController />
         </ul>
         <div className="dropdown dropdown-end">
           <div
