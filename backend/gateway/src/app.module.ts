@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { API_RECOMMENDER_URL } from './config';
+import { API_USERS_URL, API_PROGRAMS_URL, API_RECOMMENDER_URL } from './config';
 
 @Module({
   imports: [
@@ -13,8 +13,9 @@ import { API_RECOMMENDER_URL } from './config';
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
           subgraphs: [
-            //{ name: 'users', url: 'http://localhost:3002/graphql' },
-            { name: 'recommendations', url: API_RECOMMENDER_URL },
+            { name: 'users', url: API_USERS_URL },
+            //{ name: 'programs', url: API_PROGRAMS_URL },
+            //{ name: 'recommender', url: API_RECOMMENDER_URL },
           ],
         }),
       },
