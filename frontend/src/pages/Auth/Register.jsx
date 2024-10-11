@@ -32,7 +32,7 @@ const Register = () => {
 
               <div className="!mt-10">
               <div className="flex justify-center">
-                <AuthButton text="Crear cuenta" type="submit" className="max-w-xs"/>
+                <AuthButton text="Crear cuenta" className="max-w-xs"/>
               </div>
               </div>
               <p className="text-gray-800 text-base !mt-8 text-center">

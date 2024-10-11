@@ -38,11 +38,11 @@ const Login = () => {
               </div>
 
               <div className="!mt-8">
-                <AuthButton text="Ingresar" type = "submit"/>
+                <AuthButton text="Ingresar" to="/"/>
               </div>
               <p className="text-gray-800 text-sm !mt-8 text-center">
                 ¿No tienes cuenta?
-                <AuthLinkText href="javascript:void(0);" text="Registrate" className="ml-1 whitespace-nowrap"/>
+                <AuthLinkText href="/register" text="Registrate" className="ml-1 whitespace-nowrap"/>
               </p>
             </form>
           </div>
