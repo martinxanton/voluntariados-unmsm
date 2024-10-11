@@ -1,0 +1,9 @@
+# Get node image from DockerHub
+FROM node:20-alpine
+WORKDIR /usr/src/app
+COPY package*.json ./
+
+RUN npm install --ommit=dev
+COPY . .
+EXPOSE 3000
+CMD ["nest", "start"]
