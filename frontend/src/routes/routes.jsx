@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "../pages/LandingPage";
-import Search from "../pages/Search";
+import Search from "../pages/SearchPage";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import ProfileUser from "../pages/ProfileUser";
