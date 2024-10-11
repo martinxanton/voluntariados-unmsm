@@ -1,7 +1,47 @@
 import CardInfo from "../components/CardInfo";
 import CarouselTestimonial from "../components/CarouselTestimonial";
 import CardStat from "../components/CardStat";
+import CardIcon from "../components/CardIcon";
 
+
+const CategoryList = [
+    {
+      title: "Animales",
+      icon: "pets",
+    },
+    {
+      title: "Arte y Cultura",
+      icon: "palette",
+    },
+    {
+      title: "Cocina",
+      icon: "restaurant",
+    },
+    {
+      title: "Adulto Mayor",
+      icon: "elderly",
+    },
+    {
+      title: "Deportes",
+      icon: "sports",
+    },
+    {
+      title: "Educación",
+      icon: "school",
+    },
+    {
+      title: "Medio Ambiente",
+      icon: "eco",
+    },
+    {
+      title: "Salud",
+      icon: "volunteer_activism",
+    },
+    {
+      title: "Otros",
+      icon: "more_horiz",
+    },
+  ];
 
 const LandingPage = () => {
     return (
@@ -9,7 +49,7 @@ const LandingPage = () => {
 <div className="carousel w-full">
   <div id="slide1" className="carousel-item relative w-full">
     <img
-      src="src/assets/bannerLP.png"
+      src="src/assets/Banner.png"
       className="w-full" />
     <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide4" className="btn btn-circle">❮</a>
@@ -18,7 +58,7 @@ const LandingPage = () => {
   </div>
   <div id="slide2" className="carousel-item relative w-full">
     <img
-      src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
+      src="src/assets/Banner1.png"
       className="w-full" />
     <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide1" className="btn btn-circle">❮</a>
@@ -27,7 +67,7 @@ const LandingPage = () => {
   </div>
   <div id="slide3" className="carousel-item relative w-full">
     <img
-      src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
+      src="src/assets/Banner.png"
       className="w-full" />
     <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide2" className="btn btn-circle">❮</a>
@@ -36,7 +76,7 @@ const LandingPage = () => {
   </div>
   <div id="slide4" className="carousel-item relative w-full">
     <img
-      src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
+      src="src/assets/Banner1.png"
       className="w-full" />
     <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide3" className="btn btn-circle">❮</a>
@@ -46,18 +86,28 @@ const LandingPage = () => {
 </div>
 
 
-<div className="bg-base-200 min-h-60-screen flex justify-center pt-12 py-96">
+<div className="bg-base-200 min-h-60-screen flex justify-center pt-12 ">
   <div className="text-center">
-    <div className="max-w-md">
+    <div className="max-w-8xl mb-3">
       <h1 className="text-4xl font-bold">¿Cómo quieres ayudar?</h1>
-      <div className="p-3 " >
-        <div>
-            <button className="btn ">QUIERO SER VOLUNTARIO</button>        
+    <div className="p-3 bg-gray-100 rounded-lg shadow-md">
+        <div className="m-4 pb-5">
+        <button className="btn btn-primary w-80 text-xl">QUIERO SER VOLUNTARIO</button>
         </div>
         <div>
-            <h1 className="">Elige la causa ideal para ti</h1>
+            <h1 className="text-xl font-bold mb-4 p-4">Elige la causa ideal para ti</h1>
         </div>
-      </div>
+        <div className="flex flex-col p-4">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-9 gap-5 justify-around ">
+            {CategoryList.map((category, index) => (
+                <li key={index} className="mb-2 w-full">
+                <CardIcon title={category.title} icon={category.icon} />
+                </li>
+            ))}
+            </ul>
+        </div>
+    </div>
+
     </div>
   </div>
 </div>
@@ -97,7 +147,7 @@ const LandingPage = () => {
   {/* Card 2 */}
   <CardInfo
         title="Confiable"
-        description="Los programas no tienen fines."
+        description="Los programas no tienen fines de lucro."
         imagePath="src/assets/beneficio2.svg"
       />
 
@@ -117,6 +167,20 @@ const LandingPage = () => {
 </div>
 </div>
 
+<div className="hero bg-base-200 min-h-60-screen pt-5 pb-20">
+  <div className="hero-content text-center">
+    <div className="max-w-3xl mx-auto">
+      {/* Imagen justo encima del texto */}
+      <img src="src/assets/novedad.svg" alt="Imagen destacada" className="mx-auto mb-4 w-40 h-40" />
+      <h1 className="text-4xl font-bold">
+        Encuentra el programa de voluntariado ideal para ti con nuestro sistema de recomendación personalizado que se adapta a tus intereses y habilidades
+      </h1>
+
+      <p className="py-10 text-lg">Empieza a hacer una diferencia significativa en proyectos que están alineados con tus valores y que se ajustan a tu disponibilidad y competencias. ¡Regístrate ahora y encuentra tu próximo reto con solo un clic!</p>
+      <button className="btn btn-primary w-64 text-xl">Ver Programas</button>
+    </div>
+  </div>
+</div>
 
 
 <div className="my-20">
@@ -131,7 +195,9 @@ const LandingPage = () => {
 
 
 
-<div >
+
+
+<div className="pb-10" >
     <div className="text-center my-12">
         <h1 className="text-4xl font-bold">Voluntariado en cifras</h1>
     </div>

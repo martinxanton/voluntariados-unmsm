@@ -35,26 +35,24 @@ export default function CarouselTestimonial() {
   return (
     <>
       {/*<!-- Component: Testimonial carousel --> */}
-      <div className="glide-08 relative min-w-full px-12 overflow-hidden">
+      <div className="glide-08 relative min-w-full px-20 overflow-hidden">
         {/*    <!-- Slides --> */}
         <div data-glide-el="track">
           <ul className="whitespace-no-wrap flex-no-wrap [backface-visibility: hidden] [transform-style: preserve-3d] [touch-action: pan-Y] [will-change: transform] relative flex w-full overflow-hidden p-0 pb-12">
             <li>
               <div className="h-full w-full">
                 {/*                    <!-- Start Testimonial --> */}
-                <div className="h-full overflow-hidden rounded bg-white text-slate-500 shadow-2xl shadow-slate-200">
+                <div className="h-full overflow-hidden rounded bg-white  shadow-slate-800">
                   <div className="relative p-6">
                     <figure className="relative z-10">
-                      <blockquote className="p-6 text-lg leading-relaxed">
+                      <blockquote className="p-6 text-xl leading-relaxed">
                         <p>
-                          Wind-ui, is probably one of the best libraries
-                          came across. Good looking, easy to use and above all
-                          super accessible.
+                        La plataforma me permitió descubrir oportunidades que ni sabía que existían. Estoy colaborando en un programa de tutorías para niños, y siento que estoy contribuyendo a su desarrollo. Además, la interfaz es súper intuitiva y fácil de usar, ¡altamente recomendable!
                         </p>
                       </blockquote>
                       <figcaption className="flex flex-col items-start gap-2 p-6 pt-0 text-sm text-emerald-500">
                     
-                        <div className="flex items-center gap-4 pt-4 text-sm text-emerald-500">
+                        <div className="flex items-center gap-4 pt-4 text-sm text-primary">
                           <img
                             src="https://i.pravatar.cc/40?img=11"
                             alt="user name"
@@ -65,11 +63,11 @@ export default function CarouselTestimonial() {
                           />
                           <div className="flex flex-col gap-1">
                             <span className="font-bold uppercase">
-                              Bill Gates
+                              Jeff Magallanes
                             </span>
                             <cite className="not-italic">
                               <a href="http://www.microsoft.com">
-                                CEO, Microsoft
+                                Educador
                               </a>
                             </cite>
                           </div>
@@ -96,18 +94,17 @@ export default function CarouselTestimonial() {
             <li>
               <div className="h-full w-full">
                 {/*                    <!-- Start Testimonial --> */}
-                <div className="h-full overflow-hidden rounded bg-white text-slate-500 shadow-2xl shadow-slate-200">
+                <div className="h-full overflow-hidden rounded bg-white shadow-slate-200">
                   <div className="relative p-6">
                     <figure className="relative z-10">
-                      <blockquote className="p-6 text-lg leading-relaxed">
+                      <blockquote className="p-6 text-xl leading-relaxed">
                         <p>
-                          Wind-ui components come with proper attributes to
-                          ensure full accessibility with the WAI-ARIA standards.
+                        Gracias a esta plataforma, pude inscribirme rápidamente en un programa de reforestación local. Lo mejor es que no solo pude aportar a la comunidad, sino que también conocí a otros estudiantes con los mismos intereses. ¡Es increíble cómo podemos organizarnos y hacer la diferencia!
                         </p>
                       </blockquote>
                       <figcaption className="flex flex-col items-start gap-2 p-6 pt-0 text-sm text-emerald-500">
                         
-                        <div className="flex items-center gap-4 pt-4 text-sm text-emerald-500">
+                        <div className="flex items-center gap-4 pt-4 text-sm text-primary">
                           <img
                             src="https://i.pravatar.cc/40?img=25"
                             alt="user name"
@@ -118,11 +115,11 @@ export default function CarouselTestimonial() {
                           />
                           <div className="flex flex-col gap-1">
                             <span className="font-bold uppercase">
-                              Jane Smith
+                              Williams Santiago
                             </span>
                             <cite className="not-italic">
                               <a href="http://www.microsoft.com">
-                                WAI-ARIA, Representative
+                                Industrial
                               </a>
                             </cite>
                           </div>
@@ -149,19 +146,17 @@ export default function CarouselTestimonial() {
             <li>
               <div className="h-full w-full">
                 {/*                    <!-- Start Testimonial --> */}
-                <div className="h-full overflow-hidden rounded bg-white text-slate-500 shadow-2xl shadow-slate-200">
+                <div className="h-full overflow-hidden rounded bg-white shadow-slate-200">
                   <div className="relative p-6">
                     <figure className="relative z-10">
-                      <blockquote className="p-6 text-lg leading-relaxed">
+                      <blockquote className="p-6 text-xl leading-relaxed">
                         <p>
-                          You can easily communicate with Wind-ui's team for
-                          support through their discord channel. They are
-                          responsive and ultra helpful guys!
+                        Encontrar un programa de voluntariado que se ajustara a mi tiempo libre era un reto, pero con esta plataforma fue muy sencillo. Ahora participo en un proyecto de apoyo psicológico a adolescentes, y la experiencia ha sido sumamente enriquecedora tanto a nivel personal como profesional.
                         </p>
                       </blockquote>
-                      <figcaption className="flex flex-col items-start gap-2 p-6 pt-0 text-sm text-emerald-500">
+                      <figcaption className="flex flex-col items-start gap-2 p-6 pt-0 text-sm text-primary">
                         
-                        <div className="flex items-center gap-4 pt-4 text-sm text-emerald-500">
+                        <div className="flex items-center gap-4 pt-4 text-sm text-primary">
                           <img
                             src="https://i.pravatar.cc/40?img=7"
                             alt="user name"
@@ -172,11 +167,11 @@ export default function CarouselTestimonial() {
                           />
                           <div className="flex flex-col gap-1">
                             <span className="font-bold uppercase">
-                              Arnold Jones
+                              Albert Perez
                             </span>
                             <cite className="not-italic">
                               <a href="http://www.microsoft.com">
-                                Software Engineer
+                                Danza
                               </a>
                             </cite>
                           </div>
