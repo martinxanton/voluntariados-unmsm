@@ -108,6 +108,13 @@ const SearchPage = () => {
     setLocationQuery(e.target.value);
   };
 
+  const searchCategory = (category) => {
+    console.log("filtro seleccionado ");
+    console.log(category);
+    const result = volunteeringList.filter((volunteering) => volunteering.category === category);
+    setFilteredVolunteering(result);
+
+  };
   // Filtrar los voluntariados en función de la búsqueda y ubicación
   const filterVolunteering = () => {
     let filtered = volunteeringList.filter((volunteering) => {
@@ -135,7 +142,7 @@ const SearchPage = () => {
           <ul className="flex gap-5 justify-around overflow-auto">
             {CategoryList.map((category, index) => (
               <li key={index} className="mb-2">
-                <CardIcon title={category.title} icon={category.icon} />
+                <CardIcon title={category.title} icon={category.icon} onClick={ () => searchCategory(category.title) } />
               </li>
             ))}
           </ul>
