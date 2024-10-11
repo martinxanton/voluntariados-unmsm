@@ -1,3 +1,7 @@
+import AuthInputField from "../../components/AuthInputField.jsx";
+import AuthButton from "../../components/AuthButton.jsx";
+import AuthLinkText from "../../components/AuthLinkText.jsx";
+
 const Login = () => {
   return (
     <div className="min-h-screen bg-gray-100 text-black">
@@ -17,30 +21,9 @@ const Login = () => {
             </h2>
             
             <form className="space-y-4">
-              <div>
-                <label className="text-gray-800 text-sm mb-2 block font-bold">
-                  Correo
-                </label>
-                <div className="relative flex items-center">
-                  <input name="username" type="text" required
-                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    placeholder="ejemplo@gmail.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-gray-800 text-sm mb-2 block font-bold">
-                  Contraseña
-                </label>
-                <div className="relative flex items-center">
-                  <input name="password" type="password" required 
-                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    placeholder="**********"
-                  />
-                </div>
-              </div>
-
+              <AuthInputField label="Correo" type="text" name="email" placeholder="ejemplo@gmail.com"/>
+              <AuthInputField label="Contraseña" type="password" name="password" placeholder="**********"/>
+              
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center">
                   <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"/>
@@ -50,23 +33,16 @@ const Login = () => {
                 </div>
 
                 <div className="text-sm">
-                  <a href="javascript:void(0);" className="text-blue-600 hover:underline font-semibold">
-                    Olvidé mi contraseña
-                  </a>
+                  <AuthLinkText href="javascript:void(0);" text="Olvidé mi contraseña"/>
                 </div>
               </div>
 
               <div className="!mt-8">
-                <button type="button" className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
-                >
-                  Ingresar
-                </button>
+                <AuthButton text="Ingresar" type = "submit"/>
               </div>
               <p className="text-gray-800 text-sm !mt-8 text-center">
                 ¿No tienes cuenta?
-                <a href="javascript:void(0);" className="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold">
-                  Registrate
-                </a>
+                <AuthLinkText href="javascript:void(0);" text="Registrate" className="ml-1 whitespace-nowrap"/>
               </p>
             </form>
           </div>
