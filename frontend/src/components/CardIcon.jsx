@@ -45,7 +45,6 @@ const CardIcon = ({ title, icon, onClick }) => {
 CardIcon.propTypes = {
   title: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired,
   onClick: PropTypes.func,
 };
 
