@@ -1,18 +1,27 @@
+import { light } from 'daisyui/src/theming/themes';
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  darkMode: 'selector',
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {},
   },
   plugins: [
-    // eslint-disable-next-line no-undef
-    require('daisyui'),
+    require("daisyui"),
   ],
-  daisyui: {
-    themes: ["light", "dark", "cupcake", "dim", "winter"],
+  daisyui: {  
+    themes: [{
+      light: {
+        ...require("daisyui/src/theming/themes")["fantasy"],
+        primary: "#0075bf",
+        secondary: "#6d0076",
+      },
+      dark: {
+        ...require("daisyui/src/theming/themes")["night"],
+        primary: "#0075bf",
+        secondary: "#6d0076",
+      },
+    }],
   },
-}
-
+};

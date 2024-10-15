@@ -4,6 +4,24 @@ import CardVolunteering from "../components/CardVolunteering";
 import { useState } from "react";
 
 const CategoryList = [
+  "Animales",
+  "Arte y Cultura",
+  "Cocina",
+  "Adulto Mayor",
+  "Deportes",
+  "Educación",
+  "Medio Ambiente",
+  "Salud",
+  "Tecnología",
+  "Música",
+  "Ciencia",
+  "Viajes",
+  "Comunidad",
+  "Desarrollo Personal",
+  "Ayuda Humanitaria",
+];
+
+const CategoryListCard = [
   {
     title: "Animales",
     icon: "pets",
@@ -91,6 +109,18 @@ const volunteeringList = [
     category: "Salud",
     tags: ["Vacunación", "Consultas"],
   },
+  {
+    photo:
+      "https://cdn.www.gob.pe/uploads/document/file/4401758/standard_Becaria%20Dayana%20Narciso%20en%20una%20de%20las%20actividades%20de%20su%20voluntariado%20Thani%20Kirus.png",
+    title: "Voluntariado en Salud",
+    organization: "HealthFirst",
+    date: "25/04/2022",
+    location: "Trujillo",
+    totalVac: 12,
+    filledVac: 6,
+    category: "Ayuda Humanitaria",
+    tags: ["Vacunación", "Consultas"],
+  },
 ];
 
 const SearchPage = () => {
@@ -98,6 +128,7 @@ const SearchPage = () => {
     useState(volunteeringList);
   const [searchQuery, setSearchQuery] = useState("");
   const [locationQuery, setLocationQuery] = useState("");
+  const [categoryQuery, setCategoryQuery] = useState([]);
 
   // Funciones para capturar los valores del input
   const handleSearchChange = (e) => {
@@ -108,13 +139,6 @@ const SearchPage = () => {
     setLocationQuery(e.target.value);
   };
 
-  const searchCategory = (category) => {
-    console.log("filtro seleccionado ");
-    console.log(category);
-    const result = volunteeringList.filter((volunteering) => volunteering.category === category);
-    setFilteredVolunteering(result);
-
-  };
   // Filtrar los voluntariados en función de la búsqueda y ubicación
   const filterVolunteering = () => {
     let filtered = volunteeringList.filter((volunteering) => {
@@ -129,26 +153,85 @@ const SearchPage = () => {
         .toLowerCase()
         .includes(locationQuery.toLowerCase());
 
-      return matchesSearch && matchesLocation || matchesSearch_2 && matchesLocation;
+      return (
+        (matchesSearch && matchesLocation) ||
+        (matchesSearch_2 && matchesLocation)
+      );
     });
     setFilteredVolunteering(filtered);
   };
 
+  // Filtrar los voluntariados en función de la categoría
+  const searchCategory = (category) => {
+    console.log("filtro añadido: " + category);
+    let updatedCategories
+    let categoryList
+    if (category === "Otros") {
+      //no incluir categorias "medio ambienre" y "salud"
+      categoryList = CategoryList.filter(
+        (cat) =>
+          cat !== "Animales" &&
+          cat !== "Arte y Cultura" &&
+          cat !== "Cocina" &&
+          cat !== "Adulto Mayor" &&
+          cat !== "Deportes" &&
+          cat !== "Educación" &&
+          cat !== "Medio Ambiente" &&
+          cat !== "Salud" 
+      );
+    } 
+    if (categoryQuery.includes(category)  || categoryQuery.includes(categoryList)) {
+      updatedCategories = categoryQuery.filter((cat) => cat !== category);
+    } else {
+      updatedCategories = [...categoryQuery, category];
+    }
+    setCategoryQuery(updatedCategories);
+    const result = volunteeringList.filter((volunteering) => {
+      return updatedCategories.includes(volunteering.category);
+    });
+    setFilteredVolunteering(result);
+    
+  };
+
   return (
-    <div className="bg-base-200 min-h-screen p-4 lg:p-6">
+    <div className="bg-base-100 min-h-screen">
       <div className="flex flex-col">
-        <div className="flex flex-col p-4">
+        {/* banner */}
+        <div className="relative w-full h-64">
+          <img
+            src="https://bicentenario.gob.pe/portal/2023/03/mar-31-23.jpg"
+            alt="Banner"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          <div className="absolute inset-10 flex flex-col items-start justify-center">
+            <p className="text-white text-3xl font-semibold">Encuentra</p>
+            <p className="text-white text-4xl font-bold">el voluntariado</p>
+            <p className="text-white text-3xl font-semibold">
+              al que quisieras
+            </p>
+            <p className="text-white text-3xl font-semibold">participar</p>
+          </div>
+        </div>
+        {/* Categorías */}
+        <div className="flex flex-col px-4 py-8 bg-slate-100 dark:bg-slate-800">
           <h2 className="text-xl font-bold mb-4 p-4">Categorías</h2>
           <ul className="flex gap-5 justify-around overflow-auto">
-            {CategoryList.map((category, index) => (
+            {CategoryListCard.map((category, index) => (
               <li key={index} className="mb-2">
-                <CardIcon title={category.title} icon={category.icon} onClick={ () => searchCategory(category.title) } />
+                <CardIcon
+                  title={category.title}
+                  icon={category.icon}
+                  onClick={() => searchCategory(category.title)}
+                />
               </li>
             ))}
           </ul>
         </div>
+        {/* Filtros y Voluntariados */}
         <div className="w-full p-4">
           <div className="flex flex-col md:flex-row">
+            {/* Filtros */}
             <div className="w-full md:w-1/4 p-4">
               <h2 className="text-xl font-bold mb-4">Filtros</h2>
               <ul className="flex flex-col gap-2">
@@ -161,18 +244,7 @@ const SearchPage = () => {
                       value={searchQuery}
                       onChange={handleSearchChange}
                     />
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                      className="h-4 w-4 opacity-70"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    <MaterialSymbol icon="search" size={20} fill grade={-25} />
                   </label>
                 </li>
                 <li className="mb-2">
@@ -192,16 +264,20 @@ const SearchPage = () => {
                     />
                   </label>
                 </li>
-                <button className="btn btn-primary" onClick={filterVolunteering}>
+                <button
+                  className="btn btn-primary"
+                  onClick={filterVolunteering}
+                >
                   Buscar
                 </button>
               </ul>
             </div>
+            {/* Voluntariados */}
             <div className="w-full md:w-3/4 p-4">
               <h2 className="text-xl font-bold mb-4">
                 Voluntariados Disponibles
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredVolunteering.map((volunteering, index) => (
                   <div key={index}>
                     <CardVolunteering
@@ -225,4 +301,3 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
-

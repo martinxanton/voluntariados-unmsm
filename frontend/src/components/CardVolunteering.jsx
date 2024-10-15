@@ -2,7 +2,7 @@ import { MaterialSymbol } from "react-material-symbols";
 import PropTypes from "prop-types";
 
 const CardVolunteering = ({
-  photo,
+  photo = "https://via.placeholder.com/300",
   title,
   organization,
   date,
@@ -13,9 +13,9 @@ const CardVolunteering = ({
   const availableVac = totalVac - filledVac;
 
   return (
-    <div className="card bg-base-100 w-80 shadow-md">
-      <figure className="h-44">
-        <img src={photo} alt="Shoes" />
+    <div className="card bg-base-100 h-full shadow-md">
+      <figure className="h-44 lg:h-40">
+        <img src={photo} alt="Shoes" className="object-cover h-full w-full" />
       </figure>
       <div className="card-body p-5">
         <h1 className="text-xl font-medium">{title}</h1>
@@ -44,7 +44,7 @@ const CardVolunteering = ({
           <p className="font-medium">Vacantes disponibles: </p>
           <p>{availableVac}</p>
         </div>
-        <div className="card-actions justify-around flex mt-2">
+        <div className="card-actions justify-around flex pt-2 mt-auto">
           <button className="btn btn-primary flex-1">Únete</button>
           <button className="btn btn-outline btn-primary flex-1">
             Compartir
@@ -65,16 +65,5 @@ CardVolunteering.propTypes = {
   filledVac: PropTypes.number.isRequired,
 };
 
-// deafult value
-
-CardVolunteering.defaultProps = {
-  photo: "https://www.idsplus.net/wp-content/uploads/default-placeholder.png",
-  title: "Titulo de el voluntariado",
-  organization: "Organización",
-  date: "Fecha",
-  location: "Ubicación",
-  totalVac: 0,
-  filledVac: 0,
-};
 
 export default CardVolunteering;
