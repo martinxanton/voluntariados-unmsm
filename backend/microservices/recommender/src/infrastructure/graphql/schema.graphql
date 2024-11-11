@@ -1,0 +1,27 @@
+type Recommendation @key(fields: "id") {
+  id: ID!
+  student: Student
+  lines: [RecommendationLine]
+  createdAt: String!
+}
+
+type RecommendationLine @key(fields: "recommendation") {
+  id: ID!
+  recommendation: Recommendation!
+  program: Program!
+  score: Float!
+}
+
+type Student @key(fields: "id") {
+  id: ID!
+  major: String!
+  age: Int!
+}
+
+type Program @key(fields: "id") {
+  id: ID!
+}
+
+type Mutation {
+  generateRecommendation(studentId: ID!): Recommendation
+}

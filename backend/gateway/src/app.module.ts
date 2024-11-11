@@ -13,9 +13,9 @@ import { API_USERS_URL, API_PROGRAMS_URL, API_RECOMMENDER_URL } from './config';
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
           subgraphs: [
-            { name: 'users', url: API_USERS_URL },
+            //{ name: 'users', url: API_USERS_URL },
             //{ name: 'programs', url: API_PROGRAMS_URL },
-            //{ name: 'recommender', url: API_RECOMMENDER_URL },
+            { name: 'recommender', url: API_RECOMMENDER_URL },
           ],
         }),
       },
