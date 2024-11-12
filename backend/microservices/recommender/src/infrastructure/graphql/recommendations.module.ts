@@ -7,10 +7,11 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { RecommendationsResolver } from './recommendations.resolver';
 import { ApolloServerPluginInlineTrace } from '@apollo/server/plugin/inlineTrace';
 import { GetRecommendationUseCase } from 'src/application/use-cases/get-recommendation.usecase';
-import { MockRecommendationRepository } from '../db/recommendation.repository.impl';
+import { RecommendationRepository } from '../db/recommendation.repository.impl';
 import { StudentService } from 'src/domain/services/student.service';
-import { MockStudentRepository } from '../db/student.repository.impl';
+import { StudentRepository } from '../db/student.repository.impl';
 import { RecommendationService } from 'src/domain/services/recommendation.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -19,15 +20,16 @@ import { RecommendationService } from 'src/domain/services/recommendation.servic
       typePaths: ['**/*.graphql'],
       plugins: [ApolloServerPluginInlineTrace()],
     }),
+    HttpModule,
   ],
   providers: [
     {
       provide: 'IRecommendationRepository',
-      useClass: MockRecommendationRepository,
+      useClass: RecommendationRepository,
     },
     {
       provide: 'IStudentRepository',
-      useClass: MockStudentRepository,
+      useClass: StudentRepository,
     },
     StudentService,
     RecommendationService,

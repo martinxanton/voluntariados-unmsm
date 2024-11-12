@@ -1,7 +1,7 @@
 import { Student } from 'src/domain/models/student.model';
 import { IStudentRepository } from 'src/domain/repositories/student.repository.interface';
 
-export class MockStudentRepository implements IStudentRepository {
+export class StudentRepository implements IStudentRepository {
   private students: Student[] = [
     new Student(1, 'Medicina', 21),
     new Student(2, 'Ingeniería de Software', 18),

@@ -29,7 +29,7 @@ export class GetRecommendationUseCase {
               60 *
               60 *
               24 *
-              this.configService.getRecommendationRefreshDays,
+              this.configService.recommendationRefreshDays,
         )
     ) {
       return latestRecommendation;

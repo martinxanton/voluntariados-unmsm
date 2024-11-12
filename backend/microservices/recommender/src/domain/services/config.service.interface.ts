@@ -1,3 +1,5 @@
 export interface IConfigService {
-  get getRecommendationRefreshDays(): number;
+  get recommendationRefreshDays(): number;
+  get port(): number;
+  get modelServingUrl(): string;
 }
