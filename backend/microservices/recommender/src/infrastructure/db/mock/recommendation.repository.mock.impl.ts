@@ -1,23 +1,23 @@
-import { Student } from 'src/domain/models/student.model';
-import { Recommendation } from 'src/domain/models/recommendation.model';
-import { IRecommendationRepository } from 'src/domain/repositories/recommendation.repository.interface';
-import { Program } from 'src/domain/models/program.model';
-import { RecommendationLine } from 'src/domain/models/recommendation.line.model';
+import { Student } from '../../../domain/models/student.model';
+import { Recommendation } from '../../../domain/models/recommendation.model';
+import { IRecommendationRepository } from '../../../domain/repositories/recommendation.repository.interface';
+import { Program } from '../../../domain/models/program.model';
+import { RecommendationLine } from '../../../domain/models/recommendation.line.model';
 
 export class MockRecommendationRepository implements IRecommendationRepository {
   private recommendations: Recommendation[] = [];
 
   constructor() {}
 
-  save(recommendation: Recommendation): Promise<void> {
+  create(recommendation: Recommendation): Promise<Recommendation> {
     this.recommendations.push(recommendation);
-    return Promise.resolve();
+    return Promise.resolve(recommendation);
   }
 
   fetchByStudent(student: Student): Promise<Recommendation> {
-    const recommendation = new Recommendation(1, student, new Date(), []);
+    const recommendation = new Recommendation(student);
     recommendation.lines.push(
-      new RecommendationLine(1, recommendation, new Program(1), 10.0),
+      new RecommendationLine(recommendation, new Program(1), 10.0),
     );
     return Promise.resolve(recommendation);
   }

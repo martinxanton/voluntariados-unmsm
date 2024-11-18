@@ -9,10 +9,11 @@ import {
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
-import { GetRecommendationUseCase } from 'src/application/use-cases/get-recommendation.usecase';
-import { Recommendation } from 'src/domain/models/recommendation.model';
-import { Student } from 'src/domain/models/student.model';
-import { IRecommendationRepository } from 'src/domain/repositories/recommendation.repository.interface';
+import { GetRecommendationUseCase } from '../../application/use-cases/get-recommendation.usecase';
+import { Recommendation } from '../../domain/models/recommendation.model';
+import { Student } from '../../domain/models/student.model';
+import { IRecommendationRepository } from '../../domain/repositories/recommendation.repository.interface';
+import { log } from 'console';
 
 @Injectable()
 @Resolver(() => Recommendation)
@@ -31,13 +32,14 @@ export class RecommendationsResolver {
   //   await this.getRecommendationUseCase.execute(Number(studentId));
   //   return recommendation;
   // }
-  
+
   @Mutation(() => Recommendation)
   async generateRecommendation(
     @Args('studentId') studentId: string,
-  ): Promise<Recommendation> {
-    const recommendation =
-    await this.getRecommendationUseCase.execute(Number(studentId));
+  ): Promise<Object> {
+    const recommendation = await this.getRecommendationUseCase.execute(
+      Number(studentId),
+    );
     return recommendation;
   }
 
@@ -45,7 +47,7 @@ export class RecommendationsResolver {
   getUser(@Parent() post: Post) {
     return { __typename: 'User', id: post.userId };
   } */
-  
+
   @ResolveReference()
   async resolveReference(reference: {
     __typename: string;
@@ -53,5 +55,4 @@ export class RecommendationsResolver {
   }): Promise<Recommendation> {
     return await this.recommendationRepository.findById(reference.id);
   }
-  
 }

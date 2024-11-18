@@ -5,7 +5,7 @@ type Recommendation @key(fields: "id") {
   createdAt: String!
 }
 
-type RecommendationLine @key(fields: "recommendation") {
+type RecommendationLine @key(fields: "id") {
   id: ID!
   recommendation: Recommendation!
   program: Program!

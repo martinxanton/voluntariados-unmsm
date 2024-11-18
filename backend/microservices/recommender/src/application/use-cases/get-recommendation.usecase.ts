@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConflictException } from '@nestjs/common';
-import { Recommendation } from 'src/domain/models/recommendation.model';
-import { IConfigService } from 'src/domain/services/config.service.interface';
-import { RecommendationService } from 'src/domain/services/recommendation.service';
-import { StudentService } from 'src/domain/services/student.service';
+import { Recommendation } from '../../domain/models/recommendation.model';
+import { IConfigService } from '../../domain/services/config.service.interface';
+import { RecommendationService } from '../../domain/services/recommendation.service';
+import { StudentService } from '../../domain/services/student.service';
 
 @Injectable()
 export class GetRecommendationUseCase {
@@ -16,7 +16,7 @@ export class GetRecommendationUseCase {
 
   async execute(studentId: number): Promise<Recommendation> {
     const student = await this.studentService.getStudentById(studentId);
-    
+
     const latestRecommendation =
       await this.recommendationService.getLatestByStudent(student);
 
@@ -25,22 +25,18 @@ export class GetRecommendationUseCase {
       latestRecommendation.createdAt >
         new Date(
           Date.now() -
-            1000 *
-              60 *
-              60 *
-              24 *
-              this.configService.recommendationRefreshDays,
+            1000 * 60 * 60 * 24 * this.configService.recommendationRefreshDays,
         )
     ) {
       return latestRecommendation;
     }
 
     if (!student) {
-      throw new ConflictException('Student not found');
+      throw new ConflictException('Student not found.');
     }
 
     const recommendation =
-      await this.recommendationService.getByStudent(student);
+      await this.recommendationService.generateByStudent(student);
 
     return recommendation;
   }

@@ -3,9 +3,9 @@ import { Recommendation } from "./recommendation.model";
 
 export class RecommendationLine {
   constructor(
-    public recommendation: Recommendation,
-    public program: Program,
-    public score: number,
-    public  readonly id?: number,
+    public readonly recommendation: Recommendation,
+    public readonly program: Program,
+    public readonly score: number,
+    public id?: number,
   ) {}
 }

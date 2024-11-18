@@ -3,9 +3,9 @@ import { Student } from './student.model';
 
 export class Recommendation {
   constructor(
-    public student: Student,
-    public createdAt: Date,
-    public lines: RecommendationLine[],
-    public readonly id?: Number,
+    public readonly student: Student,
+    public lines: RecommendationLine[] = [],
+    public createdAt: Date = new Date(),
+    public id?: Number,
   ) {}
 }

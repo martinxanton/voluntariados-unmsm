@@ -6,7 +6,7 @@ import { AppConfigService } from './config.service.impl';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: 'infrastructure/config/.env',
+      envFilePath: 'src/infrastructure/config/.env',
     }),
   ],
   providers: [

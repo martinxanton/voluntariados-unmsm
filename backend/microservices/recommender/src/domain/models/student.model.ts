@@ -3,7 +3,7 @@
 export class Student {
   constructor(
     public readonly id: number,
-    public major: string,
-    public age: number,
+    public major?: string,
+    public age?: number,
   ) {}
 }

@@ -1,5 +1,5 @@
 export class Program {
   constructor(
-    public id: number,
+    public readonly id: number,
   ) {}
 }
