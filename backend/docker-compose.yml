@@ -1,20 +1,20 @@
 services:
+  # gateway:
+  #   build: ./gateway
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - recommender-service
+
   user-service:
     build: ./microservices/user
     ports:
       - "3001:4000"
-    environment:
-      MONGO_URI: mongodb://mongo:27017/estudiantesDB
-    depends_on:
-      - mongo
-
-  mongo:
-    image: mongo
-    restart: always
+      
+  recommender-service:
+    build: ./microservices/recommender
     ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-
-volumes:
-  mongo-data:
+      - "3003:3003"
+        
+#     environment:
+#       MONGO_URI: mongodb://mongo:27017/estudiantesDB
