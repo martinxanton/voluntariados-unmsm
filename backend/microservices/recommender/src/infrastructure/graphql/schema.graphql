@@ -22,6 +22,10 @@ type Program @key(fields: "id") {
   id: ID!
 }
 
+type Query {
+  getRecommendation(id: ID!): Recommendation
+}
+
 type Mutation {
   generateRecommendation(studentId: ID!): Recommendation
 }

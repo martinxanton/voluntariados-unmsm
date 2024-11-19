@@ -35,4 +35,16 @@ export class RecommendationService {
       );
     return recommendation;
   }
+  async getById(id: number): Promise<Recommendation | null> {
+    const recommendation =
+      await this.recommendationRepository.findById(id);
+    if (!recommendation) {
+      return;
+    }
+    recommendation.lines =
+      await this.recommendationLineRepository.findAllByRecommendation(
+        recommendation,
+      );
+    return recommendation;
+  }
 }

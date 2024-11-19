@@ -1,37 +1,28 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   Args,
-  ID,
   Mutation,
-  Parent,
   Query,
-  ResolveField,
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
 import { GetRecommendationUseCase } from '../../application/use-cases/get-recommendation.usecase';
 import { Recommendation } from '../../domain/models/recommendation.model';
-import { Student } from '../../domain/models/student.model';
-import { IRecommendationRepository } from '../../domain/repositories/recommendation.repository.interface';
-import { log } from 'console';
+import { RecommendationService } from '../../domain/services/recommendation.service';
 
 @Injectable()
 @Resolver(() => Recommendation)
 export class RecommendationsResolver {
   constructor(
     private getRecommendationUseCase: GetRecommendationUseCase,
-    @Inject('IRecommendationRepository')
-    private recommendationRepository: IRecommendationRepository,
+    private recommendationService: RecommendationService,
   ) {}
 
-  // @Query(() => Recommendation)
-  // async getRecommendation(
-  //   @Args('studentId') studentId: string,
-  // ): Promise<Recommendation> {
-  //   const recommendation =
-  //   await this.getRecommendationUseCase.execute(Number(studentId));
-  //   return recommendation;
-  // }
+  @Query()
+  async getRecommendation(@Args('id') id: string) {
+    const recommendation = await this.recommendationService.getById(Number(id));
+    return recommendation;
+  }
 
   @Mutation(() => Recommendation)
   async generateRecommendation(
@@ -43,16 +34,11 @@ export class RecommendationsResolver {
     return recommendation;
   }
 
-  /* @ResolveField('user')
-  getUser(@Parent() post: Post) {
-    return { __typename: 'User', id: post.userId };
-  } */
-
   @ResolveReference()
   async resolveReference(reference: {
     __typename: string;
     id: number;
   }): Promise<Recommendation> {
-    return await this.recommendationRepository.findById(reference.id);
+    return await this.recommendationService.getById(reference.id);
   }
 }
