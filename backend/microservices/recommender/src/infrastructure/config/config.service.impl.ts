@@ -38,7 +38,11 @@ export class AppConfigService implements IConfigService {
     return this.configService.get<number>('PORT', 3003);
   }
 
-  get isProduction(): boolean {
-    return this.configService.get<string>('NODE_ENV') === 'production';
+  get gcpKeyPath(): string {
+    return this.configService.get<string>('GCP_KEY_PATH', '');
+  }
+
+  get gcpScopes(): string[] {
+    return this.configService.get<string>('GCP_SCOPES', '').split(',');
   }
 }

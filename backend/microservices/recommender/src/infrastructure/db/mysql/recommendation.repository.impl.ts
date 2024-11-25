@@ -1,23 +1,17 @@
 import { Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
-import {
-  FieldPacket,
-  Pool,
-  QueryResult,
-  ResultSetHeader,
-} from 'mysql2/promise';
+import { FieldPacket, Pool, ResultSetHeader } from 'mysql2/promise';
 import { Student } from '../../../domain/models/student.model';
 import { Program } from '../../../domain/models/program.model';
 import { Recommendation } from '../../../domain/models/recommendation.model';
 import { RecommendationLine } from '../../../domain/models/recommendation.line.model';
 import { IConfigService } from '../../../domain/services/config.service.interface';
 import { IRecommendationRepository } from '../../../domain/repositories/recommendation.repository.interface';
-import { log } from 'console';
+import { GoogleCloudTensorflowService } from '../tensorflow/tensorflow.service';
 
 export class RecommendationRepository implements IRecommendationRepository {
   constructor(
-    private readonly httpService: HttpService,
+    private readonly gcpService: GoogleCloudTensorflowService,
     @Inject('IConfigService')
     private readonly configService: IConfigService,
     @Inject('DB_CONNECTION')
@@ -41,23 +35,12 @@ export class RecommendationRepository implements IRecommendationRepository {
   async fetchByStudent(student: Student): Promise<Recommendation> {
     try {
       const data = {
-        instances: [
-          {
-            student_id: student.id.toString(),
-            major: student.major,
-            age: student.age,
-          },
-        ],
+        student_id: student.id.toString(),
+        major: student.major,
+        age: student.age,
       };
 
-      const response = await lastValueFrom(
-        this.httpService.post(this.configService.modelServingUrl, data, {
-          headers: { 'Content-Type': 'application/json' },
-        }),
-      );
-
-      const content = response.data;
-      const predictions = content.predictions[0];
+      const predictions = await this.gcpService.fetchPredictions(data);
 
       if (predictions) {
         const scores = predictions.output_1;
