@@ -45,6 +45,9 @@ coverage/
 .env.test.local
 .env.production.local
 
+# GCLOUD
+gcp-key.json
+
 # IDEs
 .vscode/
 .idea/

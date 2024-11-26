@@ -7,5 +7,6 @@ export interface IConfigService {
   get recommendationRefreshDays(): number;
   get modelServingUrl(): string;
   get port(): number;
-  get isProduction(): boolean;
+  get gcpKeyPath(): string;
+  get gcpScopes(): string[];
 }

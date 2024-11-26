@@ -1,10 +1,10 @@
 services:
-  # gateway:
-  #   build: ./gateway
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - recommender-service
+  gateway:
+    build: ./gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - recommender-service
 
   user-service:
     build: ./microservices/user
@@ -15,6 +15,3 @@ services:
     build: ./microservices/recommender
     ports:
       - "3003:3003"
-        
-#     environment:
-#       MONGO_URI: mongodb://mongo:27017/estudiantesDB

@@ -3,11 +3,11 @@ import { IConfigService } from '../../../domain/services/config.service.interfac
 import { createPool } from 'mysql2/promise';
 import { RecommendationRepository } from './recommendation.repository.impl';
 import { StudentRepository } from './student.repository.impl';
-import { HttpModule } from '@nestjs/axios';
 import { RecommendationLineRepository } from './recommendation.line.repository.impl';
+import { TensorflowModule } from '../tensorflow/tensorflow.module';
 
 @Module({
-  imports: [HttpModule],
+  imports: [TensorflowModule],
   providers: [
     {
       provide: 'DB_CONNECTION',
