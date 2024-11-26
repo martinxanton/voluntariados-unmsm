@@ -1,227 +1,196 @@
+import RequirementField from "../components/RequirementField";
+import React, { useState } from "react";
+
 const VolunteeringDetails = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleToggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
   return (
     <div className="bg-gray-100 p-4">
       <div className="border-1 shadow-lg shadow-gray-700 rounded-lg">
-        {/* Top content */}
-        <div className="flex rounded-t-lg bg-top-color sm:px-2 w-full">
+        {/* Banner - Tittle */}
+        <div className="flex rounded-t-lg bg-top-color sm:px-2 w-full bg-blue-300">
           <div className="h-40 w-40 overflow-hidden sm:rounded-full sm:relative sm:p-0 top-10 left-5 p-3">
             <img
-              src="https://media.licdn.com/dms/image/C4D03AQH8qidO0nb_Ng/profile-displayphoto-shrink_800_800/0/1615696897070?e=2147483647&v=beta&t=ia3wfE2J7kVLdBy9ttkgUDAA_ul29fymykhQo0lABDo"
-              alt="Profile"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSklYCKeacQhUuDhS_YiHQJpfRSjzv7I3gJw&s"
+              alt="Logo"
             />
           </div>
           <div className="w-2/3 sm:text-center pl-5 mt-10 text-start">
             <p className="font-poppins font-bold text-heading sm:text-4xl text-2xl">
-              Amit Pachange
+              Voluntariado RSU desde la PUCP
             </p>
-            <p className="text-heading">Software Engineer</p>
+            <p className="text-heading">volsaludablemente</p>
           </div>
         </div>
 
         {/* Main content */}
-        <div className="p-5">
+        <div className="py-5 px-12">
           <div className="flex flex-col sm:flex-row sm:mt-10">
             <div className="flex flex-col sm:w-1/3">
-              {/* My Contact */}
+              {/* Join */}
               <div className="py-3 sm:order-none order-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
-                  My Contact
+                  Información
                 </h2>
                 <div className="border-2 w-20 border-top-color my-3"></div>
                 <div>
-                  <div className="flex items-center my-1">
-                    <div className="ml-2 truncate">amitpachange@gmail.com</div>
-                  </div>
-                  <div className="flex items-center my-1">
-                    <div>4574358775</div>
-                  </div>
-                  <div className="flex items-center my-1">
-                    <a
-                      className="w-6 text-gray-700 hover:text-orange-600"
-                      aria-label="Visit TrendyMinds Facebook"
-                      href=""
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 320 512"
-                        className="h-4"
-                      >
-                        <path
-                          fill="currentColor"
-                          d="m279.14 288 14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-                        ></path>
+                  <div className="flex items-center my-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-blue-600">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                       </svg>
-                    </a>
-                    <div>sale galli latur</div>
+                    <div>Del 25/11/2024 al 20/12/2025</div>
                   </div>
-                  <div className="flex items-center my-1">
-                    <a
-                      className="w-6 text-gray-700 hover:text-orange-600"
-                      aria-label="Visit TrendyMinds Twitter"
-                      href=""
-                      target="_blank"
-                      rel="noreferrer"
-                    ></a>
-                    <div>amitpachange21</div>
+                  <div className="flex items-center my-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-blue-600">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                    <div>¡Es Flexible! Nos acomodamos a tu horario.</div>
                   </div>
                 </div>
               </div>
 
-              {/* Skills */}
+              {/* Address */}
               <div className="py-3 sm:order-none order-2">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Skills
+                  Dirección
                 </h2>
                 <div className="border-2 w-20 border-top-color my-3"></div>
-                <div>
-                  <div className="flex items-center my-1">
-                    <div className="ml-2">Java</div>
+                <div className="flex items-center my-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-blue-600">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                </svg>
+                    <div>OMAPED, Casa del Adulto Mayor, Local Comunal</div>
                   </div>
-                  <div className="flex items-center my-1">
-                    <div className="ml-2">Android</div>
-                  </div>
-                  <div className="flex items-center my-1">
-                    <div className="ml-2">Html, Css, JS</div>
-                  </div>
-                </div>
               </div>
 
-              {/* Education Background */}
-              <div className="py-3 sm:order-none order-1">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Education Background
-                </h2>
-                <div className="border-2 w-20 border-top-color my-3"></div>
-                <div className="flex flex-col space-y-1">
-                  <div className="flex flex-col">
-                    <p className="font-semibold text-xs text-gray-700">2021</p>
-                    <p className="text-sm font-medium">
-                      <span className="text-green-700">
-                        B.E. (INFORMATION TECHNOLOGY)
-                      </span>
-                      , PIMPRI CHINCHWAD COLLEGE OF ENGINEERING, PUNE.
-                    </p>
-                    <p className="font-bold text-xs text-gray-700 mb-2">
-                      Percentage: 76.61
-                    </p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="font-semibold text-xs text-gray-700">2017</p>
-                    <p className="text-sm font-medium">
-                      <span className="text-green-700">HSC</span>, RAJARSHI SHAHU
-                      COLLEGE, LATUR.
-                    </p>
-                    <p className="font-bold text-xs text-gray-700 mb-2">
-                      Percentage: 80.77
-                    </p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="font-semibold text-xs text-gray-700">2015</p>
-                    <p className="text-sm font-medium">
-                      <span className="text-green-700">SSC</span>, DNYANESHWAR
-                      HIGH SCHOOL, LATUR.
-                    </p>
-                    <p className="font-bold text-xs text-gray-700 mb-2">
-                      Percentage: 93.80
-                    </p>
-                  </div>
-                </div>
+              {/* Join Program */}
+              <div className="py-3 sm:order-none order-1 flex justify-center">
+                <button onClick={handleToggleModal} 
+                  className="w-2/3 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  type="button">
+                  Únete
+                </button>
               </div>
             </div>
 
-            <div className="flex flex-col sm:w-2/3 order-first sm:order-none sm:-mt-10">
-              {/* About Me */}
+            <div className="flex flex-col pr-12 sm:w-2/3 order-first sm:order-none sm:-mt-10">
+              {/* About The Program */}
               <div className="py-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
-                  About Me
+                  Sobre el programa
                 </h2>
                 <div className="border-2 w-20 border-top-color my-3"></div>
                 <p>
-                  To get a career opportunity which would help me to utilize my
-                  academic background to assist me to gain experience, employ
-                  my excellent skills, and enable me to make positive
-                  contribution.
+                  El Voluntariado RSU desde la PUCP busca responder a diversos desafíos de la sostenibilidad social y ambiental, aportando al logro de los Objetivos de Desarrollo Sostenible (ODS) de la Agenda 20230. Además, se trata de una experiencia formativa pues es una oportunidad para que nuestra comunidad universitaria pueda aprender, desde una experiencia solidaria, en contextos territorialmente situados y en vínculo con grupos, comunidades u organizaciones, acompañadas/os por docentes, personal administrativo o gestoras/es de organizaciones comprometidas/os con el enfoque.
+                </p>
+                <p>
+                  Desde la RSU, el voluntariado busca el ejercicio de una ciudadanía activa que trabaje de la mano con la posibilidad de intervenir, plantear soluciones e involucrarse con la realidad de manera sostenida. Se espera que las y los voluntarios sean agentes de transformación social, a partir de sus intervenciones y contribuyan a generar impactos positivos en su entorno.
                 </p>
               </div>
 
-              {/* Professional Experience */}
+              {/* Requirements and indications */}
               <div className="py-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Professional Experience
+                  Requisitos e Indicaciones
                 </h2>
                 <div className="border-2 w-20 border-top-color my-3"></div>
+                  <p>
+                  Toda propuesta que forme parte del Programa de Voluntariado RSU desde la PUCP y que pueda ser gestionada por agrupaciones estudiantiles PUCP, unidades PUCP o por organizaciones externas, deberá garantizar un conjunto de condiciones básicas para su incorporación en el Programa:
+                  </p>
                 <div className="flex flex-col">
-                  <div className="flex flex-col">
-                    <p className="text-lg font-bold text-gray-700">
-                      Netcracker Technology | Software Engineer
-                    </p>
-                    <p className="font-semibold text-sm text-gray-700">
-                      2021 - Present
-                    </p>
-                    <p className="font-semibold text-sm text-gray-700 mt-2 mb-1">
-                      Key Responsibilities
-                    </p>
-                    <ul className="text-sm list-disc pl-4 space-y-1">
-                      <li>Working on customer facing product</li>
-                      <li>Delivering highly efficient solutions</li>
-                      <li>Solving critical bugs</li>
-                    </ul>
-                  </div>
-
-                  <div className="flex flex-col mt-8">
-                    <p className="text-lg font-bold text-gray-700">
-                      TailwindFlex.com | Lead
-                    </p>
-                    <p className="font-semibold text-sm text-gray-700">
-                      2020-2021
-                    </p>
-                    <p className="font-semibold text-sm text-gray-700 mt-2 mb-1">
-                      Key Responsibilities
-                    </p>
-                    <ul className="text-sm list-disc pl-4 space-y-1">
-                      <li>Developed usable components</li>
-                      <li>Solving complex problems</li>
-                      <li>Solving critical bugs</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Projects */}
-              <div className="py-3">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Projects
-                </h2>
-                <div className="border-2 w-20 border-top-color my-3"></div>
-                <div className="flex flex-col">
-                  <div className="flex flex-col">
-                    <p className="text-lg font-semibold text-gray-700">
-                      Used Books mobile app
-                    </p>
-                    <p className="font-normal text-sm text-gray-700 mb-1 pl-2">
-                      A platform to sell as well as to buy used books only for
-                      PCCoE College due to this reuse of books will be there
-                      beneficial for environment also indirectly helps increase
-                      communication between juniors and seniors.
-                    </p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-lg font-semibold text-gray-700">
-                      Parking Automation System
-                    </p>
-                    <p className="font-normal text-sm text-gray-700 mb-1 pl-2">
-                      it’s a web application which helps you to book your slot
-                      for your car just like booking a movie ticket from home.
-                    </p>
-                  </div>
+                  <RequirementField
+                    title="RELACIÓN CON EL DESARROLLO HUMANO SOSTENIBLE"
+                    description="Responder a una problemática acotada y que se aborde desde una mirada real y reflexiva; dialogando con los enfoques de género, sostenibilidad, interculturalidad y/o territorial."
+                  />
+                  <RequirementField
+                    title="VÍNCULO HORIZONTAL"
+                    description="Mantener un vínculo desde el respeto y diálogo participativo con el grupo humano con el que se trabaje, considerando la devolución de aprendizajes al cierre de la experiencia."
+                  />
+                  <RequirementField
+                    title="CAPACITACIÓN"
+                    description="Brindar sesiones de inducción y capacitación adecuadas sobre los objetivos, temporalidad, roles a asumir, beneficios, límites de participación y herramientas suficientes para desarrollar las actividades."
+                  />
+                  <RequirementField
+                    title="ACOMPAÑAMIENTO"
+                    description="Brindar acompañamiento que permita la reflexión y diálogo sobre la labor voluntaria: aprendizajes y retos a nivel personal-emocional, profesional y ciudadano; y atención de situaciones problemáticas o conflictivas."
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div id="popup-modal" tabIndex="-1" className="fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50">
+          <div className="relative p-4 w-full max-w-md max-h-full">
+            <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+              {/* Close button */}
+              <button onClick={handleToggleModal} type="button"
+                className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                <svg className="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+                <span className="sr-only">Close modal</span>
+              </button>
+
+              {/* Contenido del modal */}
+              <div className="p-4 md:p-5 text-center">
+                <svg
+                  className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  />
+                </svg>
+                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                  ¿Estas seguro que quieres unirte?
+                </h3>
+                <button
+                  onClick={handleToggleModal}
+                  type="button"
+                  className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
+                >
+                  Sí, estoy seguro
+                </button>
+                <button
+                  onClick={handleToggleModal}
+                  type="button"
+                  className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                >
+                  No, cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
