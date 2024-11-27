@@ -1,21 +1,27 @@
 require('dotenv').config();
-const express = require('express');
-const { graphqlHTTP } = require('express-graphql');
+const { ApolloServer } = require('apollo-server');
+const { buildSubgraphSchema } = require("@apollo/subgraph");
 const connectDB = require('./config/db');
-const schema = require('./graphql/schema');
+const typeDefs  = require('./graphql/schema');
 const resolvers = require('./graphql/resolvers');
 
-const app = express();
-connectDB();
+const startServer = async () => {
+  try {
+    // Conecta la base de datos
+    await connectDB();
 
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema,
-    rootValue: resolvers,
-    graphiql: true,
-  })
-);
+    // Crea el servidor Apollo con Federation
+    const server = new ApolloServer({
+      schema: buildSubgraphSchema({ typeDefs, resolvers }),
+    });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    // Arranca el servidor
+    const { url } = await server.listen(process.env.PORT || 4100);
+    console.log(`Servidor federado corriendo en ${url}`);
+  } catch (error) {
+    console.error("Error al iniciar el servidor:", error.message);
+  }
+};
+
+// Ejecuta la función de inicio
+startServer();
