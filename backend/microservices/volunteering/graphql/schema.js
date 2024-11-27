@@ -1,7 +1,8 @@
-const { buildSchema } = require('graphql');
+const { gql } = require('apollo-server');
 
-module.exports = buildSchema(`
-  type Volunteer {
+module.exports = gql`
+  # Apollo Federation requiere una clave única en las entidades
+  type Volunteer @key(fields: "id") {
     id: ID!
     title: String!
     organization: String!
@@ -66,4 +67,4 @@ module.exports = buildSchema(`
       userId: String!
     ): Volunteer!
   }
-`);
+`;
