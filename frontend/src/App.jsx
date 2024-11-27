@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       {!hideNavbarFooter && (
-        <div className="sticky">
+        <div className="sticky top-0 z-50">
           <Navbar />
         </div>
       )}

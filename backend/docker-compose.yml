@@ -1,0 +1,17 @@
+services:
+  gateway:
+    build: ./gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - recommender-service
+
+  user-service:
+    build: ./microservices/user
+    ports:
+      - "3001:4000"
+      
+  recommender-service:
+    build: ./microservices/recommender
+    ports:
+      - "3003:3003"

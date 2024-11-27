@@ -1,10 +1,19 @@
 const ThemeController = () => {
+  const handleToggle = (event) => {
+    if (event.target.checked) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
   return (
     <label className="grid cursor-pointer place-items-center">
       <input
         type="checkbox"
         value="dark"
         className="toggle theme-controller bg-base-content col-span-2 col-start-1 row-start-1"
+        onChange={handleToggle}
       />
       <svg
         className="stroke-base-100 fill-base-100 col-start-1 row-start-1"
