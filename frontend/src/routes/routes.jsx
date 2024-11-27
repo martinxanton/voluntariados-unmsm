@@ -7,6 +7,7 @@ import ProfileUser from "../pages/ProfileUser";
 import VolunteeringDetails from "../pages/VolunteeringDetails";
 import VolunteeringRegister from "../pages/VolunteeringRegister";
 import VolunteeringTracking from "../pages/VolunteeringTracking";
+import DashboardVolunteering from "../pages/DashboardVolunteering";
 
 const AppRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes = () => {
       <Route path="/volunteering-details" element={<VolunteeringDetails />} />
       <Route path="/volunteering-register" element={<VolunteeringRegister />} />
       <Route path="/volunteering-tracking" element={<VolunteeringTracking />} />
+      <Route path="/dashboard-volunteering" element={<DashboardVolunteering/>} />
     </Routes>
   );
 };
