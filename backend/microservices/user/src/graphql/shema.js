@@ -1,7 +1,7 @@
-const { buildSchema } = require('graphql');
+const { gql } = require('apollo-server');
 
-module.exports = buildSchema(`
-  type User {
+module.exports = gql`
+  type User @key(fields: "id") {
     id: ID!
     email: String!
     codigo_universitario: String!
@@ -35,4 +35,4 @@ module.exports = buildSchema(`
     category: String
     tags: [String]
   }
-`);
+`;
