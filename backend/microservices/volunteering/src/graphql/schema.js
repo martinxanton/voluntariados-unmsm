@@ -5,7 +5,7 @@ module.exports = gql`
   type Volunteer @key(fields: "id") {
     id: ID!
     title: String!
-    organization: String!
+    organization: Organization!
     date: String!
     location: String!
     totalVac: Int!
@@ -20,51 +20,33 @@ module.exports = gql`
     approved: Boolean!
   }
 
+  type Organization @key(fields: "id") {
+    id: ID!
+    name: String!
+    email: String!
+    phone: String
+    address: String
+    adminId: String!
+  }
+
   type Query {
     getVolunteers: [Volunteer!]!
     getVolunteerById(id: ID!): Volunteer
     getUsersByVolunteer(id: ID!, approved: Boolean): [UserVolunteer!]!
+    getOrganizations: [Organization!]!
+    getOrganizationById(id: ID!): Organization
   }
 
   type Mutation {
-    createVolunteer(
-      title: String!
-      organization: String!
-      date: String!
-      location: String!
-      totalVac: Int!
-      category: String!
-      tags: [String!]!
-    ): Volunteer!
-
-    updateVolunteer(
-      id: ID!
-      title: String
-      organization: String
-      date: String
-      location: String
-      totalVac: Int
-      category: String
-      tags: [String!]
-    ): Volunteer!
-
+    createVolunteer(title: String!, organization: ID!, date: String!, location: String!, totalVac: Int!, category: String!, tags: [String!]!): Volunteer!
+    updateVolunteer(id: ID!, title: String, organization: ID, date: String, location: String, totalVac: Int, category: String, tags: [String]): Volunteer!
     deleteVolunteer(id: ID!): Volunteer!
+    addUserToVolunteer(volunteerId: ID!, userId: String!, role: String, approved: Boolean): Volunteer!
+    removeUserFromVolunteer(volunteerId: ID!, userId: String!): Volunteer!
+    approveUser(volunteerId: ID!, userId: String!): Volunteer!
 
-    addUserToVolunteer(
-      volunteerId: ID!
-      userId: String!
-      role: String
-      approved: Boolean
-    ): Volunteer!
-
-    removeUserFromVolunteer(
-      volunteerId: ID!
-      userId: String!
-    ): Volunteer!
-
-    approveUser(
-      volunteerId: ID!
-      userId: String!
-    ): Volunteer!
+    createOrganization(name: String!, email: String!, phone: String, address: String, adminId: String!): Organization!
+    updateOrganization(id: ID!, name: String, email: String, phone: String, address: String, adminId: String!): Organization!
+    deleteOrganization(id: ID!, adminId: String!): Organization!
   }
 `;

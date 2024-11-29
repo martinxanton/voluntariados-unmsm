@@ -1,4 +1,5 @@
 const Volunteer = require('../models/volunteer');
+const Organization = require('../models/organization'); // Importamos el modelo de organización
 
 module.exports = {
   Volunteer: {
@@ -11,21 +12,21 @@ module.exports = {
   Query: {
     getVolunteers: async () => {
       try {
-        return await Volunteer.find();
+        return await Volunteer.find().populate('organization'); // Poblamos los datos de la organización
       } catch (err) {
         throw new Error('Failed to fetch volunteers');
       }
     },
     getVolunteerById: async (_, { id }) => {
       try {
-        return await Volunteer.findById(id);
+        return await Volunteer.findById(id).populate('organization'); // Poblamos los datos de la organización
       } catch (err) {
         throw new Error('Volunteer not found');
       }
     },
     getUsersByVolunteer: async (_, { id, approved }) => {
       try {
-        const volunteer = await Volunteer.findById(id);
+        const volunteer = await Volunteer.findById(id).populate('organization');
         if (!volunteer) throw new Error('Volunteer not found');
 
         let users = volunteer.users;
@@ -36,6 +37,20 @@ module.exports = {
         return users;
       } catch (err) {
         throw new Error('Failed to fetch users for the volunteer');
+      }
+    },
+    getOrganizations: async () => {
+      try {
+        return await Organization.find();
+      } catch (err) {
+        throw new Error('Failed to fetch organizations');
+      }
+    },
+    getOrganizationById: async (_, { id }) => {
+      try {
+        return await Organization.findById(id);
+      } catch (err) {
+        throw new Error('Organization not found');
       }
     },
   },
@@ -125,6 +140,53 @@ module.exports = {
         return await volunteer.save();
       } catch (err) {
         throw new Error('Failed to approve user');
+      }
+    },
+
+    // Mutaciones para organizaciones
+    createOrganization: async (_, { name, email, phone, address, adminId }) => {
+      const organization = new Organization({
+        name,
+        email,
+        phone,
+        address,
+        adminId,
+      });
+      try {
+        return await organization.save();
+      } catch (err) {
+        throw new Error('Failed to create organization');
+      }
+    },
+
+    updateOrganization: async (_, { id, name, email, phone, address, adminId }) => {
+      try {
+        const organization = await Organization.findById(id);
+        if (!organization) throw new Error('Organization not found');
+
+        if(adminId !== organization.adminId) throw new Error('Unauthorized action');
+
+        if (name !== undefined) organization.name = name;
+        if (email !== undefined) organization.email = email;
+        if (phone !== undefined) organization.phone = phone;
+        if (address !== undefined) organization.address = address;
+        if (adminId !== undefined) organization.adminId = adminId;
+
+        return await organization.save();
+      } catch (err) {
+        throw new Error('Failed to update organization');
+      }
+    },
+
+    deleteOrganization: async (_, { id, adminId }) => {
+      try {
+        const organization = await Organization.findById(id);
+        if(adminId !== organization.adminId) throw new Error('Unauthorized action');
+        const deletedOrganization = await Organization.findByIdAndDelete(id);
+        if (!deletedOrganization) throw new Error('Organization not found');
+        return deletedOrganization;
+      } catch (err) {
+        throw new Error('Failed to delete organization');
       }
     },
   },
