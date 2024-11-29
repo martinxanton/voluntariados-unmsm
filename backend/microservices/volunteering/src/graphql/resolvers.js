@@ -53,6 +53,15 @@ module.exports = {
         throw new Error('Organization not found');
       }
     },
+    // Query para obtener los voluntarios de una organización
+    getVolunteersByOrganization: async (_, { id }) => {
+      try {
+        return await Volunteer.find({ organization: id });
+      } catch (err) {
+        throw new Error('Failed to fetch volunteers for the organization');
+      }
+    },
+
   },
 
   Mutation: {
