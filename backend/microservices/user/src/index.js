@@ -2,7 +2,7 @@ require("dotenv").config();
 const { ApolloServer } = require("apollo-server");
 const { buildSubgraphSchema } = require("@apollo/subgraph");
 const connectDB = require("./config/db");
-const typeDefs = require("./graphql/shema"); // Ahora es compatible con gql
+const typeDefs = require("./graphql/schema"); // Ahora es compatible con gql
 const resolvers = require("./graphql/resolvers");
 
 const startServer = async () => {
