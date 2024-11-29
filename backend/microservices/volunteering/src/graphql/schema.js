@@ -35,6 +35,7 @@ module.exports = gql`
     getUsersByVolunteer(id: ID!, approved: Boolean): [UserVolunteer!]!
     getOrganizations: [Organization!]!
     getOrganizationById(id: ID!): Organization
+    getVolunteersByOrganization(id: ID!): [Volunteer!]!
   }
 
   type Mutation {
