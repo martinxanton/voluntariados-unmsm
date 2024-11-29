@@ -1,12 +1,71 @@
 import RequirementField from "../components/RequirementField";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { gql, useQuery, useLazyQuery  } from "@apollo/client";
+
+const GET_VOLUNTEER_BY_ID = gql`
+  query GetVolunteerById($id: ID!) {
+    getVolunteerById(id: $id) {
+      id
+      title
+      organization {
+        id
+      }
+      date
+      location
+      totalVac
+      category
+      tags
+      users {
+        userId
+      }
+    }
+  }
+`;
+
+const GET_ORGANIZATION_BY_ID = gql`
+  query GetOrganizationById($id: ID!) {
+    getOrganizationById(id: $id) {
+      name
+    }
+  }
+`;
+
+//const VolunteeringDetails = ({ id }) => {
 
 const VolunteeringDetails = () => {
+  const fixedId = "675101aa5f8b83e08e255502";
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { loading, error, data } = useQuery(GET_VOLUNTEER_BY_ID, {
+    variables: { id: fixedId },
+  });
+
+  const [getOrganizationById, { data: orgData, loading: orgLoading, error: orgError }] = useLazyQuery(GET_ORGANIZATION_BY_ID);
+
+  useEffect(() => {
+    if (data?.getVolunteerById?.organization?.id) {
+      const orgId = data.getVolunteerById.organization.id;
+      getOrganizationById({ variables: { id: orgId } });
+    }
+  }, [data, getOrganizationById]);
 
   const handleToggleModal = () => {
     setIsModalOpen((prev) => !prev);
   };
+
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const volunteer = data.getVolunteerById;
+  const organizationName = orgData?.getOrganizationById?.name || "Desconocido";
+  const formattedDate = new Date(Number(volunteer.date)).toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  console.log(volunteer)
 
   return (
     <div className="bg-gray-100 p-4">
@@ -21,9 +80,9 @@ const VolunteeringDetails = () => {
           </div>
           <div className="w-2/3 sm:text-center pl-5 mt-10 text-start">
             <p className="font-poppins font-bold text-heading sm:text-4xl text-2xl">
-              Voluntariado RSU desde la PUCP
+              {volunteer.title}
             </p>
-            <p className="text-heading">volsaludablemente</p>
+            <p className="text-heading">{organizationName}</p>
           </div>
         </div>
 
@@ -42,7 +101,7 @@ const VolunteeringDetails = () => {
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-blue-600">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                       </svg>
-                    <div>Del 25/11/2024 al 20/12/2025</div>
+                    <div>{formattedDate}</div>
                   </div>
                   <div className="flex items-center my-2">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-blue-600">
@@ -64,7 +123,7 @@ const VolunteeringDetails = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                 </svg>
-                    <div>OMAPED, Casa del Adulto Mayor, Local Comunal</div>
+                    <div>{volunteer.location}</div>
                   </div>
               </div>
 
