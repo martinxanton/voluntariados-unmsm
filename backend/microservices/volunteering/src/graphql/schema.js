@@ -26,6 +26,7 @@ module.exports = gql`
     email: String!
     phone: String
     address: String
+    adminId: String!
   }
 
   type Query {
@@ -44,8 +45,8 @@ module.exports = gql`
     removeUserFromVolunteer(volunteerId: ID!, userId: String!): Volunteer!
     approveUser(volunteerId: ID!, userId: String!): Volunteer!
 
-    createOrganization(name: String!, email: String!, phone: String, address: String): Organization!
-    updateOrganization(id: ID!, name: String, email: String, phone: String, address: String): Organization!
-    deleteOrganization(id: ID!): Organization!
+    createOrganization(name: String!, email: String!, phone: String, address: String, adminId: String!): Organization!
+    updateOrganization(id: ID!, name: String, email: String, phone: String, address: String, adminId: String!): Organization!
+    deleteOrganization(id: ID!, adminId: String!): Organization!
   }
 `;

@@ -144,12 +144,13 @@ module.exports = {
     },
 
     // Mutaciones para organizaciones
-    createOrganization: async (_, { name, email, phone, address }) => {
+    createOrganization: async (_, { name, email, phone, address, adminId }) => {
       const organization = new Organization({
         name,
         email,
         phone,
         address,
+        adminId,
       });
       try {
         return await organization.save();
@@ -158,15 +159,18 @@ module.exports = {
       }
     },
 
-    updateOrganization: async (_, { id, name, email, phone, address }) => {
+    updateOrganization: async (_, { id, name, email, phone, address, adminId }) => {
       try {
         const organization = await Organization.findById(id);
         if (!organization) throw new Error('Organization not found');
+
+        if(adminId !== organization.adminId) throw new Error('Unauthorized action');
 
         if (name !== undefined) organization.name = name;
         if (email !== undefined) organization.email = email;
         if (phone !== undefined) organization.phone = phone;
         if (address !== undefined) organization.address = address;
+        if (adminId !== undefined) organization.adminId = adminId;
 
         return await organization.save();
       } catch (err) {
@@ -174,8 +178,10 @@ module.exports = {
       }
     },
 
-    deleteOrganization: async (_, { id }) => {
+    deleteOrganization: async (_, { id, adminId }) => {
       try {
+        const organization = await Organization.findById(id);
+        if(adminId !== organization.adminId) throw new Error('Unauthorized action');
         const deletedOrganization = await Organization.findByIdAndDelete(id);
         if (!deletedOrganization) throw new Error('Organization not found');
         return deletedOrganization;
