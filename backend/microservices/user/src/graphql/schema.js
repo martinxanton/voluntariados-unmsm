@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require("apollo-server");
 
 module.exports = gql`
   type User @key(fields: "id") {
@@ -23,9 +23,22 @@ module.exports = gql`
   }
 
   type Mutation {
-    registerUser(email: String!, password: String!, codigo_universitario: String!, username: String!): User
+    registerUser(
+      email: String!
+      password: String!
+      codigo_universitario: String!
+      username: String!
+    ): User
     loginUser(email: String!, password: String!): String
-    updateUser(id: ID!, interests: InterestsInput): User
+    updateUser(
+      id: ID!
+      interests: InterestsInput
+      email: String
+      password: String
+      codigo_universitario: String
+      username: String
+      isAdmin: Boolean
+    ): User
     deleteUser(id: ID!): User
   }
 
