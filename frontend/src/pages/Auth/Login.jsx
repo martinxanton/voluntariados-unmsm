@@ -23,7 +23,7 @@ const Login = () => {
       const { data } = await loginUser({ variables: { email, password } });
       console.log("Login successful");
       console.log(data.loginUser);
-      navigate("../");
+      navigate("../search");
     } catch (e) {
       console.error("Login failed:", e.message);
     }
