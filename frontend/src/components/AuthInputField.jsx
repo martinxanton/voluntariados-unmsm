@@ -1,5 +1,5 @@
 
-const AuthInputField = ({ label, type, name, placeholder, required }) => {
+const AuthInputField = ({ label, type, name, placeholder, id, value, onChange, required }) => {
     return (
       <div>
         <label className="text-gray-800 text-sm mb-2 block font-bold">
@@ -7,9 +7,12 @@ const AuthInputField = ({ label, type, name, placeholder, required }) => {
         </label>
         <div className="relative flex items-center">
           <input 
-            name={name} 
-            type={type} 
+            name={name}
+            id={id} 
+            type={type}
             required
+            value={value}
+            onChange={onChange}
             className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600" 
             placeholder={placeholder} 
           />
