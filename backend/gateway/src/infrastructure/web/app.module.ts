@@ -16,8 +16,8 @@ import { AppConfigService } from '../config/config.service';
         gateway: {
           supergraphSdl: new IntrospectAndCompose({
             subgraphs: [
-              // { name: 'users', url: appConfigService.apiUsersUrl },
-              // { name: 'programs', url: appConfigService.apiProgramsUrl },
+              { name: 'users', url: appConfigService.apiUsersUrl },
+              { name: 'programs', url: appConfigService.apiProgramsUrl },
               { name: 'recommender', url: appConfigService.apiRecommenderUrl },
             ],
           }),
