@@ -1,8 +1,52 @@
 import AuthInputField from "../../components/AuthInputField.jsx";
 import AuthButton from "../../components/AuthButton.jsx";
 import AuthLinkText from "../../components/AuthLinkText.jsx";
+import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+
+const REGISTER_MUTATION = gql`
+  mutation registerUser($email: String!, $password: String!, $codigo_universitario: String!, $username: String!) {
+    registerUser(email: $email, password: $password, codigo_universitario: $codigo_universitario, username: $username) {
+      id
+      email
+      username
+      codigo_universitario
+    }
+  }
+`;
 
 const Register = () => {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repassword, setRepassword] = useState("");
+  const [codigo_universitario, setCodigoUniversitario] = useState("");
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+  const [registerUser] = useMutation(REGISTER_MUTATION);
+  const [error2, setError2] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError2(null);
+    try {
+      if (password !== repassword) {
+        console.error("Passwords do not match");
+        setError2("Las contraseñas no coinciden");
+        return;
+      }
+
+      const { data } = await registerUser({ variables: { email, password, codigo_universitario, username } });
+      console.log("Register successful");
+      console.log(data.registerUser);
+      navigate("../");
+    } catch (e) {
+      console.error("Register failed:", e.message);
+      setError2("Error en el registro: " + e.message);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 text-black">
     <div className="min-h-screen flex flex-col items-center justify-center py-6 px-2">
@@ -20,19 +64,35 @@ const Register = () => {
               Registrar cuenta
             </h2>
 
-            <form>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="grid sm:grid-cols-2 gap-8">
-                <AuthInputField label="Nombres" type="text" name="name" placeholder="Carlos Antonio"/>
-                <AuthInputField label="Apellidos" type="text" name="lname" placeholder="Mejia Caicedo"/>
-                <AuthInputField label="Correo" type="text" name="email" placeholder="carlos.mejia6@unmsm.edu.pe"/>
-                <AuthInputField label="Código de estudiante" type="number" name="number" placeholder="20200258"/>
-                <AuthInputField label="Contraseña" type="password" name="password" placeholder="**********"/>
-                <AuthInputField label="Confirma contraseña" type="password" name="cpassword" placeholder="**********"/>
+                <AuthInputField label="Nombres" type="text" name="name" placeholder="Carlos Antonio"
+                value = {username}
+                onChange={(e) => setUsername(e.target.value)}
+                />
+
+                <AuthInputField label="Correo" type="text" name="email" placeholder="carlos.mejia6@unmsm.edu.pe"
+                value = {email}
+                onChange={(e) => setEmail(e.target.value)}
+                />
+                <AuthInputField label="Código de estudiante" type="number" name="number" placeholder="20200258"
+                value={codigo_universitario}
+                onChange={(e) => setCodigoUniversitario(e.target.value)}
+                />
+                <AuthInputField label="Contraseña" type="password" name="password" placeholder="**********"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                />
+                <AuthInputField label="Confirma contraseña" type="password" name="cpassword" placeholder="**********"
+                value = {repassword}
+                onChange={(e) => setRepassword(e.target.value)}
+                />
               </div>
+              <p>{error2}</p>
 
               <div className="!mt-10">
               <div className="flex justify-center">
-                <AuthButton text="Crear cuenta" className="max-w-xs"/>
+                <AuthButton text="Crear cuenta" className="max-w-xs" type="submit"/>
               </div>
               </div>
               <p className="text-gray-800 text-base !mt-8 text-center">
