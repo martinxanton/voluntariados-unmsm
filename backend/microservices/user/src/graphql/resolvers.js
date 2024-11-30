@@ -1,90 +1,157 @@
-// Importamos dependencias esenciales para el manejo de usuarios, encriptación y tokens.
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Resolvers para GraphQL: Definen cómo se procesan las consultas y mutaciones.
 const resolvers = {
+  // Resolución de referencias para Apollo Federation
   User: {
-    // Resolver para obtener un usuario a partir de su referencia (usado en subgráficos).
     __resolveReference: async ({ id }) => {
-      return await User.findById(id); // Busca al usuario por su ID.
+      return await User.findById(id);
     },
   },
+
   Query: {
-    // Obtiene un usuario específico por ID.
+    // Consultas
     getUser: async (_, { id }) => {
       return await User.findById(id);
     },
-    // Obtiene todos los usuarios registrados.
     getUsers: async () => {
       return await User.find();
     },
+    getNotificationsByUserId: async (_, { idUsuario }) => {
+      const user = await User.findById(idUsuario);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      return user.notificaciones;
+    },
+    getScoresByUserId: async (_, { idUsuario }) => {
+      const user = await User.findById(idUsuario);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      return user.scores;
+    },
+    getInterestsByUserId: async (_, { idUsuario }) => {
+      const user = await User.findById(idUsuario);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      return user.interests;
+    },
   },
+
   Mutation: {
-    // Registra un nuevo usuario, encriptando su contraseña antes de guardarlo.
+    // Mutaciones
     registerUser: async (
       _,
-      { email, password, codigo_universitario, username }
+      { email, password, codigoUniversitario, username, nombre, apellido }
     ) => {
-      const hashedPassword = await bcrypt.hash(password, 10); // Encripta la contraseña.
+      const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({
         email,
         password: hashedPassword,
-        codigo_universitario,
+        codigoUniversitario,
         username,
+        nombre,
+        apellido,
       });
-      return await user.save(); // Guarda el usuario en la base de datos.
+      return await user.save();
     },
-    // Autentica a un usuario, verificando las credenciales y generando un token JWT.
     loginUser: async (_, { email, password }) => {
-      const user = await User.findOne({ email }); // Busca al usuario por email.
+      const user = await User.findOne({ email });
       if (!user || !(await bcrypt.compare(password, user.password))) {
-        throw new Error("Credenciales inválidas"); // Manejo de error si las credenciales son incorrectas.
+        throw new Error("Credenciales inválidas");
       }
       return jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
-      }); // Genera el token.
+      });
     },
-    // Actualiza los campos especificados de un usuario identificado por su ID.
-    updateUser: async (
-      _,
-      {
-        id,
-        email,
-        password,
-        codigo_universitario,
-        username,
-        isAdmin,
-        interests,
-      }
-    ) => {
-      // Creamos un objeto vacío que se llenará con los campos a actualizar.
+    updateUser: async (_, { id, interests, scores, notificaciones }) => {
       const updates = {};
-
-      // Agregamos al objeto solo los parámetros que se hayan proporcionado.
-      if (email) updates.email = email;
-      if (password) updates.password = await bcrypt.hash(password, 10); // Encripta la nueva contraseña si se proporciona.
-      if (codigo_universitario)
-        updates.codigo_universitario = codigo_universitario;
-      if (username) updates.username = username;
-      if (isAdmin !== undefined) updates.isAdmin = isAdmin;
       if (interests) updates.interests = interests;
-
-      // Verificamos que haya al menos un campo para actualizar.
-      if (Object.keys(updates).length === 0) {
-        throw new Error("No se proporcionaron campos para actualizar.");
-      }
-
-      // Actualizamos el usuario y devolvemos la versión actualizada.
+      if (scores) updates.scores = scores;
+      if (notificaciones) updates.notificaciones = notificaciones;
       return await User.findByIdAndUpdate(id, updates, { new: true });
     },
-    // Elimina un usuario de la base de datos por su ID.
     deleteUser: async (_, { id }) => {
       return await User.findByIdAndDelete(id);
+    },
+    addNotification: async (_, { idUsuario, categoria, mensaje }) => {
+      const user = await User.findById(idUsuario);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      const nuevaNotificacion = {
+        categoria,
+        mensaje,
+        fecha: new Date(),
+      };
+      user.notificaciones.push(nuevaNotificacion);
+      await user.save();
+      return nuevaNotificacion;
+    },
+    deleteNotification: async (_, { idUsuario, notificationId }) => {
+      const user = await User.findById(idUsuario);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      user.notificaciones = user.notificaciones.filter(
+        (notif) => notif._id.toString() !== notificationId
+      );
+      await user.save();
+      return { message: "Notificación eliminada exitosamente" };
+    },
+    addScore: async (_, { idUsuario, categoria, score }) => {
+      const user = await User.findById(idUsuario);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      const nuevoPuntaje = { categoria, score };
+      user.scores.push(nuevoPuntaje);
+      user.total_puntos += score; // Actualiza el total de puntos del usuario
+      await user.save();
+      return nuevoPuntaje;
+    },
+    deleteScore: async (_, { idUsuario, scoreId }) => {
+      const user = await User.findById(idUsuario);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      const scoreToDelete = user.scores.id(scoreId);
+      if (!scoreToDelete) {
+        throw new Error("Puntaje no encontrado");
+      }
+      user.scores.pull(scoreId);
+      user.total_puntos -= scoreToDelete.score; // Actualiza el total de puntos después de eliminar el puntaje
+      await user.save();
+      return { message: "Puntaje eliminado exitosamente" };
+    },
+    addInterest: async (
+      _,
+      { idUsuario, organization, location, category, tags }
+    ) => {
+      const user = await User.findById(idUsuario);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      const nuevoInteres = { organization, location, category, tags };
+      user.interests.push(nuevoInteres);
+      await user.save();
+      return nuevoInteres;
+    },
+    deleteInterest: async (_, { idUsuario, interestId }) => {
+      const user = await User.findById(idUsuario);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      user.interests = user.interests.filter(
+        (interest) => interest._id.toString() !== interestId
+      );
+      await user.save();
+      return { message: "Interés eliminado exitosamente" };
     },
   },
 };
 
-// Exportamos los resolvers para integrarlos en el servidor GraphQL.
 module.exports = resolvers;
