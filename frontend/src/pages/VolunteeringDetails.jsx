@@ -1,6 +1,29 @@
 import RequirementField from "../components/RequirementField";
 import React, { useState, useEffect } from "react";
-import { gql, useQuery, useLazyQuery  } from "@apollo/client";
+import { gql, useMutation, useQuery, useLazyQuery  } from "@apollo/client";
+
+const ADD_USER_TO_VOLUNTEER = gql`
+  mutation AddUserToVolunteer(
+    $volunteerId: ID!
+    $userId: String!
+    $role: String
+    $approved: Boolean
+  ) {
+    addUserToVolunteer(
+      volunteerId: $volunteerId
+      userId: $userId
+      role: $role
+      approved: $approved
+    ) {
+      id
+      users {
+        userId
+        role
+        approved
+      }
+    }
+  }
+`;
 
 const GET_VOLUNTEER_BY_ID = gql`
   query GetVolunteerById($id: ID!) {
@@ -33,15 +56,18 @@ const GET_ORGANIZATION_BY_ID = gql`
 //const VolunteeringDetails = ({ id }) => {
 
 const VolunteeringDetails = () => {
-  const fixedId = "675101aa5f8b83e08e255502";
+  const fixedVolunteerId = "675101aa5f8b83e08e255502";
+  const fixedUserId = "674a561046b0d76d75f09c4a";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { loading, error, data } = useQuery(GET_VOLUNTEER_BY_ID, {
-    variables: { id: fixedId },
+    variables: { id: fixedVolunteerId },
   });
 
   const [getOrganizationById, { data: orgData, loading: orgLoading, error: orgError }] = useLazyQuery(GET_ORGANIZATION_BY_ID);
+
+  const [addUserToVolunteer, { loading: mutationLoading, error: mutationError }] = useMutation(ADD_USER_TO_VOLUNTEER);
 
   useEffect(() => {
     if (data?.getVolunteerById?.organization?.id) {
@@ -54,6 +80,24 @@ const VolunteeringDetails = () => {
     setIsModalOpen((prev) => !prev);
   };
 
+  const handleJoinVolunteer = async () => {
+    try {
+      await addUserToVolunteer({
+        variables: {
+          volunteerId: fixedVolunteerId,
+          userId: fixedUserId,
+          role: "volunteer",
+          approved: false,
+        },
+      });
+      alert("¡Te has unido al voluntariado exitosamente!");
+      handleToggleModal();
+    } catch (err) {
+      console.error(err);
+      alert("Hubo un error al unirse al voluntariado.");
+    }
+  };
+
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -64,8 +108,6 @@ const VolunteeringDetails = () => {
     month: "long",
     year: "numeric",
   });
-
-  console.log(volunteer)
 
   return (
     <div className="bg-gray-100 p-4">
@@ -231,11 +273,12 @@ const VolunteeringDetails = () => {
                   ¿Estas seguro que quieres unirte?
                 </h3>
                 <button
-                  onClick={handleToggleModal}
+                  onClick={handleJoinVolunteer}
                   type="button"
                   className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
+                  disabled={mutationLoading}
                 >
-                  Sí, estoy seguro
+                  {mutationLoading ? "Uniéndote..." : "Sí, estoy seguro"}
                 </button>
                 <button
                   onClick={handleToggleModal}
