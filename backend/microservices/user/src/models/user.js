@@ -2,10 +2,7 @@ const mongoose = require("mongoose");
 
 // Subesquema para intereses
 const interestSchema = new mongoose.Schema({
-  organization: String,
-  location: String,
-  category: String,
-  tags: [String],
+  interest: { type: String, required: true },
 });
 
 // Subesquema para notificaciones
@@ -29,9 +26,11 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   nombre: { type: String, required: true },
   apellido: { type: String, required: true },
-  edad: { type: Number },
-  carrera: { type: String },
-  total_puntos: { type: Number, default: 0 },
+  description: { type: String },
+  edad: { type: Number, required: true },
+  sexo: { type: String, enum: ["M", "F"], required: true },
+  distrito: { type: String, required: true },
+  carrera: { type: String, required: true },
   interests: [interestSchema], // Relaci贸n con intereses
   scores: [scoreSchema], // Relaci贸n con scores
   notificaciones: [notificationSchema], // Relaci贸n con notificaciones

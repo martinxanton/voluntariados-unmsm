@@ -22,38 +22,39 @@ module.exports = gql`
       username: String!
       nombre: String!
       apellido: String!
+      carrera: String!
+      edad: Int!
+      sexo: String!
+      distrito: String!
+      description: String
     ): User
 
     loginUser(email: String!, password: String!): LoginResponse!
 
     updateUser(
       id: ID!
-      interests: [InterestInput]
-      scores: [ScoreInput]
-      notificaciones: [NotificationInput]
+      edad: Int
+      password: String
+      username: String
+      nombre: String
+      apellido: String
+      description: String
+      carrera: String
+      sexo: String
+      distrito: String
     ): User
 
     deleteUser(id: ID!): User
 
-    addNotification(
-      idUsuario: ID!
-      categoria: String!
-      mensaje: String!
-    ): Notification
+    addNotification(idUsuario: ID!, categoria: String!, mensaje: String!): User
 
     deleteNotification(idUsuario: ID!, notificationId: ID!): DeletionResponse
 
-    addScore(idUsuario: ID!, categoria: String!, score: Int!): Score
+    addScore(idUsuario: ID!, categoria: String!, score: Int!): User
 
     deleteScore(idUsuario: ID!, scoreId: ID!): DeletionResponse
 
-    addInterest(
-      idUsuario: ID!
-      organization: String!
-      location: String
-      category: String!
-      tags: [String]
-    ): Interest
+    addInterest(idUsuario: ID!, interest: String!): User
 
     deleteInterest(idUsuario: ID!, interestId: ID!): DeletionResponse
   }
@@ -65,10 +66,14 @@ module.exports = gql`
     nombre: String!
     apellido: String!
     codigoUniversitario: String!
+    description: String
+    edad: Int!
+    sexo: String!
+    distrito: String!
+    carrera: String!
     notificaciones: [Notification]
     scores: [Score]
     interests: [Interest]
-    totalPuntos: Int
   }
 
   type Notification {
@@ -86,10 +91,7 @@ module.exports = gql`
 
   type Interest {
     id: ID!
-    organization: String!
-    location: String
-    category: String!
-    tags: [String]
+    interest: String!
   }
 
   input NotificationInput {
@@ -107,10 +109,7 @@ module.exports = gql`
 
   input InterestInput {
     id: ID
-    organization: String!
-    location: String
-    category: String!
-    tags: [String]
+    interest: String!
   }
 
   type DeletionResponse {

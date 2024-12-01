@@ -45,7 +45,19 @@ const resolvers = {
     // Mutaciones
     registerUser: async (
       _,
-      { email, password, codigoUniversitario, username, nombre, apellido }
+      {
+        email,
+        password,
+        codigoUniversitario,
+        username,
+        nombre,
+        apellido,
+        description,
+        carrera,
+        edad,
+        sexo,
+        distrito,
+      }
     ) => {
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({
@@ -55,6 +67,11 @@ const resolvers = {
         username,
         nombre,
         apellido,
+        description,
+        carrera,
+        edad,
+        sexo,
+        distrito,
       });
       return await user.save();
     },
@@ -68,13 +85,55 @@ const resolvers = {
       });
       return { token, user };
     },
-    updateUser: async (_, { id, interests, scores, notificaciones }) => {
-      const updates = {};
-      if (interests) updates.interests = interests;
-      if (scores) updates.scores = scores;
-      if (notificaciones) updates.notificaciones = notificaciones;
-      return await User.findByIdAndUpdate(id, updates, { new: true });
+    updateUser: async (
+      _,
+      {
+        id,
+        edad,
+        password,
+        username,
+        nombre,
+        apellido,
+        description,
+        carrera,
+        sexo,
+        distrito,
+      }
+    ) => {
+      const user = await User.findById(id);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      if (edad) {
+        user.edad = edad;
+      }
+      if (password) {
+        user.password = await bcrypt.hash(password, 10);
+      }
+      if (username) {
+        user.username = username;
+      }
+      if (nombre) {
+        user.nombre = nombre;
+      }
+      if (apellido) {
+        user.apellido = apellido;
+      }
+      if (description) {
+        user.description = description;
+      }
+      if (carrera) {
+        user.carrera = carrera;
+      }
+      if (sexo) {
+        user.sexo = sexo;
+      }
+      if (distrito) {
+        user.distrito = distrito;
+      }
+      return await user.save();
     },
+
     deleteUser: async (_, { id }) => {
       return await User.findByIdAndDelete(id);
     },
@@ -89,8 +148,7 @@ const resolvers = {
         fecha: new Date(),
       };
       user.notificaciones.push(nuevaNotificacion);
-      await user.save();
-      return nuevaNotificacion;
+      return await user.save();
     },
     deleteNotification: async (_, { idUsuario, notificationId }) => {
       const user = await User.findById(idUsuario);
@@ -111,8 +169,7 @@ const resolvers = {
       const nuevoPuntaje = { categoria, score };
       user.scores.push(nuevoPuntaje);
       user.total_puntos += score; // Actualiza el total de puntos del usuario
-      await user.save();
-      return nuevoPuntaje;
+      return await user.save();
     },
     deleteScore: async (_, { idUsuario, scoreId }) => {
       const user = await User.findById(idUsuario);
@@ -128,18 +185,14 @@ const resolvers = {
       await user.save();
       return { message: "Puntaje eliminado exitosamente" };
     },
-    addInterest: async (
-      _,
-      { idUsuario, organization, location, category, tags }
-    ) => {
+    addInterest: async (_, { idUsuario, interest }) => {
       const user = await User.findById(idUsuario);
       if (!user) {
         throw new Error("Usuario no encontrado");
       }
-      const nuevoInteres = { organization, location, category, tags };
+      const nuevoInteres = { interest };
       user.interests.push(nuevoInteres);
-      await user.save();
-      return nuevoInteres;
+      return await user.save();
     },
     deleteInterest: async (_, { idUsuario, interestId }) => {
       const user = await User.findById(idUsuario);
