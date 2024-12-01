@@ -1,4 +1,47 @@
+import DetailsColumn from "../components/DetailsColumn";
+import AuthButton from "../components/AuthButton";
+import React, { useState, useEffect } from "react";
+import { gql, useQuery } from "@apollo/client";
+
+const GET_USER_BY_ID = gql`
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      email
+      codigo_universitario
+      username
+      interests{
+        tags
+      }
+    }
+  }
+`;
+
+//const ProfileUser = ({ id }) => {
+
 const ProfileUser = () => {
+
+  const fixedId = "674ba59236d50c8d48f535f7";
+
+  const { loading, error, data } = useQuery(GET_USER_BY_ID, {
+    variables: { id: fixedId },
+  });
+
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const user = data.getUser;
+  console.log(user);
+
+    // Extraer datos del usuario para mostrarlos
+    const { username, email, codigo_universitario, interests } = user;
+
+      // Manejar intereses
+    const formattedInterests =
+    interests?.tags && interests.tags.length > 0
+      ? interests.tags.join(", ")
+      : "No especificado";
+
   return (
     <section className="w-full overflow-hidden dark:bg-gray-900">
     <div className="flex flex-col">
@@ -19,14 +62,14 @@ const ProfileUser = () => {
 
         {/* FullName */}
         <h1 className="w-full text-left my-4 sm:mx-4 xs:pl-4 text-gray-800 dark:text-white lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl font-serif">
-          Carlos Mejia Caicedo
+          {user.username}
         </h1>
       </div>
 
       <div className="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] mx-auto flex flex-col gap-4 items-center relative lg:-top-8 md:-top-6 sm:-top-4 xs:-top-4">
         {/* Description */}
         <p className="w-fit text-gray-700 dark:text-gray-400 text-md">
-        Hola, mi nombre es Carlos Mejía, soy una persona apasionada por ayudar a los demás y contribuir al bienestar de mi comunidad. Desde siempre he sentido un profundo interés por involucrarme en actividades que generen un impacto positivo en la sociedad. Creo firmemente que, a través del voluntariado, no solo puedo aportar con mi tiempo y habilidades, sino también aprender de las experiencias y valores de las personas con las que trabaje.
+        Hola, mi nombre es {user.username}, soy una persona apasionada por ayudar a los demás y contribuir al bienestar de mi comunidad. Desde siempre he sentido un profundo interés por involucrarme en actividades que generen un impacto positivo en la sociedad. Creo firmemente que, a través del voluntariado, no solo puedo aportar con mi tiempo y habilidades, sino también aprender de las experiencias y valores de las personas con las que trabaje.
         Me motiva especialmente la posibilidad de formar parte de un equipo comprometido, en el que podamos trabajar juntos hacia un objetivo común, enfrentando retos y creciendo tanto personal como profesionalmente. Además, considero que el voluntariado es una oportunidad única para retribuir a la sociedad y promover un entorno más solidario y justo.
         </p>
 
@@ -35,44 +78,31 @@ const ProfileUser = () => {
           <div className="w-full flex sm:flex-row xs:flex-col gap-2 justify-center">
             <DetailsColumn
               details={[
-                { title: 'Nombre', value: 'Carlos' },
-                { title: 'Apellidos', value: 'Mejia Caicedo' },
-                { title: 'Número', value: '+51 955 649 849' },
-                { title: 'Sexo', value: 'Masculino' },
+                { title: 'Nombre', value: username },
+                { title: 'Código', value: codigo_universitario },
               ]}
             />
             <DetailsColumn
               details={[
-                { title: 'Facultad', value: 'Facultad de Ingeniería de Sistemas e Informática' },
-                { title: 'Carrera', value: 'Ingeniería de Software' },
-                { title: 'Correo', value: 'carlos.mejia6@unmsm.edu.pe' },
-                { title: 'Ciclo', value: '10' }
+                { title: 'Correo', value: email },
+                { title: "Intereses",
+                  value: formattedInterests
+                },
               ]}
             />
           </div>
         </div>
+
+        <div className="flex justify-center space-x-4">
+          <AuthButton text="Ver mis voluntariados" className="max-w-xs" to="/search" />
+          <AuthButton text="Ver voluntariados creados" className="max-w-xs" to="/dashboard-volunteering" />
+        </div>
+
       </div>
     </div>
   </section>
 );
 };
 
-const DetailsColumn = ({ details }) => (
-<div className="w-full">
-  <dl className="text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
-    {details.map((detail, index) => (
-      <div
-        key={index}
-        className={`flex flex-col ${index === 0 ? 'pb-3' : 'py-3'}`}
-      >
-        <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">
-          {detail.title}
-        </dt>
-        <dd className="text-lg font-semibold">{detail.value}</dd>
-      </div>
-    ))}
-  </dl>
-</div>   
-  );
 
 export default ProfileUser;
