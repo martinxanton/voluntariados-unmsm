@@ -6,12 +6,14 @@ import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 const REGISTER_MUTATION = gql`
-  mutation registerUser($email: String!, $password: String!, $codigo_universitario: String!, $username: String!) {
-    registerUser(email: $email, password: $password, codigo_universitario: $codigo_universitario, username: $username) {
+  mutation registerUser($email: String!, $password: String!, $codigoUniversitario: String!, $username: String!, $nombre: String!, $apellido: String!) {
+    registerUser(email: $email, password: $password, codigoUniversitario: $codigoUniversitario, username: $username, nombre: $nombre, apellido: $apellido) {
       id
       email
       username
-      codigo_universitario
+      codigoUniversitario
+      nombre
+      apellido
     }
   }
 `;
@@ -21,8 +23,10 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
-  const [codigo_universitario, setCodigoUniversitario] = useState("");
+  const [codigoUniversitario, setCodigoUniversitario] = useState("");
   const [username, setUsername] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
   const navigate = useNavigate();
   const [registerUser] = useMutation(REGISTER_MUTATION);
   const [error2, setError2] = useState(null);
@@ -36,16 +40,26 @@ const Register = () => {
         setError2("Las contraseñas no coinciden");
         return;
       }
-
-      const { data } = await registerUser({ variables: { email, password, codigo_universitario, username } });
-      console.log("Register successful");
+  
+      const { data } = await registerUser({ 
+        variables: { 
+          email, 
+          password, 
+          codigoUniversitario, 
+          username, 
+          nombre: nombre, 
+          apellido 
+        } 
+      });
+  
+      console.log("Registro exitoso");
       console.log(data.registerUser);
       navigate("../");
     } catch (e) {
-      console.error("Register failed:", e.message);
+      console.error("Error en el registro:", e.message);
       setError2("Error en el registro: " + e.message);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 text-black">
@@ -67,16 +81,21 @@ const Register = () => {
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="grid sm:grid-cols-2 gap-8">
                 <AuthInputField label="Nombres" type="text" name="name" placeholder="Carlos Antonio"
-                value = {username}
-                onChange={(e) => setUsername(e.target.value)}
+                value = {nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                />
+
+                <AuthInputField label="Apellidos" type="text" name="name" placeholder="Mejia Mejia"
+                value = {apellido}
+                onChange={(e) => setApellido(e.target.value)}
                 />
 
                 <AuthInputField label="Correo" type="text" name="email" placeholder="carlos.mejia6@unmsm.edu.pe"
                 value = {email}
                 onChange={(e) => setEmail(e.target.value)}
                 />
-                <AuthInputField label="Código de estudiante" type="number" name="number" placeholder="20200258"
-                value={codigo_universitario}
+                <AuthInputField label="Código de estudiante" type="text" name="name" placeholder="20200258"
+                value={codigoUniversitario}
                 onChange={(e) => setCodigoUniversitario(e.target.value)}
                 />
                 <AuthInputField label="Contraseña" type="password" name="password" placeholder="**********"
@@ -87,6 +106,12 @@ const Register = () => {
                 value = {repassword}
                 onChange={(e) => setRepassword(e.target.value)}
                 />
+
+                <AuthInputField label="Username" type="text" name="name" placeholder="Darkras"
+                value = {username}
+                onChange={(e) => setUsername(e.target.value)}
+                />
+
               </div>
               <p>{error2}</p>
 
