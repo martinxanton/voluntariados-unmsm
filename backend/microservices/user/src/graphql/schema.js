@@ -9,6 +9,11 @@ module.exports = gql`
     getInterestsByUserId(idUsuario: ID!): [Interest]
   }
 
+  type LoginResponse {
+    token: String!
+    user: User!
+  }
+
   extend type Mutation {
     registerUser(
       email: String!
@@ -19,7 +24,7 @@ module.exports = gql`
       apellido: String!
     ): User
 
-    loginUser(email: String!, password: String!): String
+    loginUser(email: String!, password: String!): LoginResponse!
 
     updateUser(
       id: ID!

@@ -63,9 +63,10 @@ const resolvers = {
       if (!user || !(await bcrypt.compare(password, user.password))) {
         throw new Error("Credenciales inválidas");
       }
-      return jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
+      return { token, user };
     },
     updateUser: async (_, { id, interests, scores, notificaciones }) => {
       const updates = {};
