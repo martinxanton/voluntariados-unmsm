@@ -9,6 +9,7 @@ import VolunteeringDetails from "../pages/VolunteeringDetails";
 import VolunteeringRegister from "../pages/VolunteeringRegister";
 import VolunteeringTracking from "../pages/VolunteeringTracking";
 import DashboardVolunteering from "../pages/DashboardVolunteering";
+import ProtectedRoute from "./protectedRoute";
 
 const AppRoutes = () => {
   return (
@@ -17,15 +18,32 @@ const AppRoutes = () => {
       <Route path="/search" element={<Search />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/profiler-user" element={<ProfileUser />} />
-      <Route path="/edit-profile" element={<EditProfile />} />
+      <Route
+        path="/profiler-user"
+        element={
+          <ProtectedRoute>
+            <ProfileUser />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/edit-profile"
+        element={
+          <ProtectedRoute>
+            <EditProfile />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Estos links son dinamicos pero se usaran con estas url para seguir diseñando las interfaces */}
 
       <Route path="/volunteering-details" element={<VolunteeringDetails />} />
       <Route path="/volunteering-register" element={<VolunteeringRegister />} />
       <Route path="/volunteering-tracking" element={<VolunteeringTracking />} />
-      <Route path="/dashboard-volunteering" element={<DashboardVolunteering/>} />
+      <Route
+        path="/dashboard-volunteering"
+        element={<DashboardVolunteering />}
+      />
     </Routes>
   );
 };
