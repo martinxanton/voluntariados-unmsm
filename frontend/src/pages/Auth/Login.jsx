@@ -7,7 +7,12 @@ import { useNavigate } from "react-router-dom";
 
 const LOGIN_MUTATION = gql`
   mutation LoginUser($email: String!, $password: String!) {
-    loginUser(email: $email, password: $password)
+    loginUser(email: $email, password: $password) {
+      token
+      user {
+        id
+      }
+    }
   }
 `;
 
@@ -22,7 +27,10 @@ const Login = () => {
     try {
       const { data } = await loginUser({ variables: { email, password } });
       console.log("Login successful");
-      console.log(data.loginUser);
+
+      localStorage.setItem("token", data.loginUser.token);
+      localStorage.setItem("userId", JSON.stringify(data.loginUser.user.id));
+      
       navigate("../search");
     } catch (e) {
       console.error("Login failed:", e.message);
