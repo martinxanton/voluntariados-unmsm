@@ -1,31 +1,45 @@
-type Recommendation @key(fields: "id") {
+type VolunteeringRecommendation @key(fields: "id") {
   id: ID!
-  student: Student
-  lines: [RecommendationLine]
+  user: User!
+  lines: [VolunteeringRecommendationLine]
   createdAt: String!
+  modelName: String!,
+  modelVersion: String!
 }
 
-type RecommendationLine @key(fields: "id") {
-  id: ID!
-  recommendation: Recommendation!
-  program: Program!
+type VolunteeringRecommendationLine {
+  volunteering: Volunteering!
   score: Float!
 }
 
-type Student @key(fields: "id") {
+type UserRecommendation @key(fields: "id") {
   id: ID!
-  major: String!
-  age: Int!
+  volunteering: Volunteering!
+  lines: [UserRecommendationLine]
+  createdAt: String!
+  modelName: String!,
+  modelVersion: String!
 }
 
-type Program @key(fields: "id") {
+type UserRecommendationLine {
+  user: User!
+  score: Float!
+}
+
+type User @key(fields: "id") {
+  id: ID!
+}
+
+type Volunteering @key(fields: "id") {
   id: ID!
 }
 
 type Query {
-  getRecommendation(id: ID!): Recommendation
+  getVolunteeringRecommendation(id: ID!): VolunteeringRecommendation
+  getUserRecommendation(id: ID!): UserRecommendation
 }
 
 type Mutation {
-  generateRecommendation(studentId: ID!): Recommendation
+  generateVolunteeringRecommendation(userId: ID!): VolunteeringRecommendation
+  generateUserRecommendation(volunteeringId: ID!): UserRecommendation
 }

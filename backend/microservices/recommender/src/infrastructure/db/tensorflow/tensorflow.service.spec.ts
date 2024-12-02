@@ -20,7 +20,7 @@ describe('GoogleCloudUtils', () => {
   });
 
   it('should return a token', async () => {
-    const predictions = await sv.fetchPredictions({
+    const predictions = await sv.fetchVolunteeringPredictions({
       student_id: '1',
       major: 'Medicina',
       age: 23,

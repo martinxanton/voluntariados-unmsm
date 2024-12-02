@@ -4,12 +4,16 @@ import {
 } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { RecommendationsResolver } from './recommendations.resolver';
+import { VolRecResolver } from './volunteering.recommendations.resolver';
 import { ApolloServerPluginInlineTrace } from '@apollo/server/plugin/inlineTrace';
-import { GetRecommendationUseCase } from '../../application/use-cases/get-recommendation.usecase';
-import { StudentService } from '../../domain/services/student.service';
-import { RecommendationService } from '../../domain/services/recommendation.service';
+import { GetVolRecUseCase } from '../../application/use-cases/get-volunteering-recommendation.usecase';
+import { UserService } from '../../domain/services/user.service';
+import { VolRecommendationService } from '../../domain/services/volunteering.recommendation.service';
 import { DatabaseModule } from '../db/database.module';
+import { UsrRecommendationService } from '../../domain/services/user.recommendation.service';
+import { GetUsrRecUseCase } from '../../application/use-cases/get-user-recommendation.usecase';
+import { VolunteeringService } from '../../domain/services/volunteering.service';
+import { UsrRecResolver } from './user.recommendations.resolver';
 
 @Module({
   imports: [
@@ -21,10 +25,14 @@ import { DatabaseModule } from '../db/database.module';
     DatabaseModule,
   ],
   providers: [
-    StudentService,
-    RecommendationService,
-    GetRecommendationUseCase,
-    RecommendationsResolver,
+    UserService,
+    VolunteeringService,
+    VolRecommendationService,
+    UsrRecommendationService,
+    GetVolRecUseCase,
+    GetUsrRecUseCase,
+    VolRecResolver,
+    UsrRecResolver,
   ],
 })
 export class RecommendationsModule {}
