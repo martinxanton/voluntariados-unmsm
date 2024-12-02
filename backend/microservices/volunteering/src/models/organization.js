@@ -5,7 +5,10 @@ const OrganizationSchema = new mongoose.Schema({
   email: { type: String, required: true },
   phone: { type: String, required: false },
   address: { type: String, required: false },
-  adminId: { type: String, required: true },
+  adminId: { // Cambiamos de admin a adminId
+    type: String, // Cambiamos de ObjectId a String
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Organization", OrganizationSchema);
