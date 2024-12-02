@@ -1,6 +1,18 @@
-import ThemeController from "./ThemeController";
-
 const Navbar = () => {
+  // obtner Token de localstorage
+  const userId = localStorage.getItem("userId");
+  console.log("userId", userId);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    window.location.href = "/search";
+  };
+
+  const onInitPage = () => {
+    window.location.href = "/";
+  };
+
   return (
     <div className="navbar bg-base-100 w-full shadow-md">
       {/* Navbar start */}
@@ -40,10 +52,18 @@ const Navbar = () => {
       </div>
       {/* Navbar fullscreen */}
       <div className="navbar-start flex justify-center md:justify-start">
-        <a className="btn btn-ghost text-xl">Voluntariado UNMSM</a>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/3/3a/UNMSM_coatofarms_seal.svg"
+          alt="logo"
+          className="w-8 h-auto"
+        />
+        <a className="btn btn-ghost text-xl" onClick={onInitPage}>
+          GoSanMarcos
+        </a>
       </div>
       <div className="navbar-end gap-5">
         <ul className="menu menu-horizontal px-1 gap-2 hidden md:flex">
+          {/* Navbar items 
           <li>
             <a>Item 1</a>
           </li>
@@ -63,39 +83,43 @@ const Navbar = () => {
           <li>
             <a>Item 3</a>
           </li>
+          
           <ThemeController />
+          */}
         </ul>
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              />
+        {userId ? (
+          <div className="dropdown dropdown-end">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                />
+              </div>
             </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            >
+              <li>
+                <a onClick={handleLogout}>Cerrar Sesión</a>
+              </li>
+            </ul>
           </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-          >
-            <li>
-              <a className="justify-between">
-                Profile
-                <span className="badge">New</span>
-              </a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a>Logout</a>
-            </li>
-          </ul>
-        </div>
+        ) : (
+          <div className="navbar-end flex gap-5">
+            <a className="btn btn-outline btn-primary flex-1" href="/register">
+              Registrarse
+            </a>
+            <a className="btn btn-primary flex-1" href="/login">
+              Iniciar Sesión
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
