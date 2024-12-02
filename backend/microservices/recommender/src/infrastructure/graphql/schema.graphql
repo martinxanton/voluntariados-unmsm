@@ -8,13 +8,13 @@ type VolunteeringRecommendation @key(fields: "id") {
 }
 
 type VolunteeringRecommendationLine {
-  volunteering: Volunteering!
+  volunteering: Volunteer!
   score: Float!
 }
 
 type UserRecommendation @key(fields: "id") {
   id: ID!
-  volunteering: Volunteering!
+  volunteering: Volunteer!
   lines: [UserRecommendationLine]
   createdAt: String!
   modelName: String!,
@@ -30,7 +30,7 @@ type User @key(fields: "id") {
   id: ID!
 }
 
-type Volunteering @key(fields: "id") {
+type Volunteer @key(fields: "id") {
   id: ID!
 }
 
