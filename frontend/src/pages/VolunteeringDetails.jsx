@@ -1,13 +1,14 @@
 import RequirementField from "../components/RequirementField";
+import DetailsColumn from "../components/DetailsColumn";
 import React, { useState, useEffect } from "react";
 import { gql, useMutation, useQuery, useLazyQuery  } from "@apollo/client";
 
 const ADD_USER_TO_VOLUNTEER = gql`
   mutation AddUserToVolunteer(
     $volunteerId: ID!
-    $userId: String!
-    $role: String
-    $approved: Boolean
+    $userId: ID!
+    $role: String!
+    $approved: Boolean!
   ) {
     addUserToVolunteer(
       volunteerId: $volunteerId
@@ -17,7 +18,9 @@ const ADD_USER_TO_VOLUNTEER = gql`
     ) {
       id
       users {
-        userId
+        userId{
+          id
+        }
         role
         approved
       }
@@ -33,14 +36,13 @@ const GET_VOLUNTEER_BY_ID = gql`
       organization {
         id
       }
-      date
+      date_create
+      date_start
+      date_end
       location
       totalVac
       category
       tags
-      users {
-        userId
-      }
     }
   }
 `;
@@ -49,20 +51,28 @@ const GET_ORGANIZATION_BY_ID = gql`
   query GetOrganizationById($id: ID!) {
     getOrganizationById(id: $id) {
       name
+      email
+      phone
+      address
     }
   }
 `;
 
-//const VolunteeringDetails = ({ id }) => {
+const VolunteeringDetails = ({ id }) => {
+  const volunteerId = String(id);
+  const [userId, setUserId] = useState(null);
 
-const VolunteeringDetails = () => {
-  const fixedVolunteerId = "675101aa5f8b83e08e255502";
-  const fixedUserId = "674a561046b0d76d75f09c4a";
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    setUserId(storedUserId);
+  }, []);
+
+  const cleanedUserId = JSON.parse(userId);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { loading, error, data } = useQuery(GET_VOLUNTEER_BY_ID, {
-    variables: { id: fixedVolunteerId },
+    variables: { id: volunteerId },
   });
 
   const [getOrganizationById, { data: orgData, loading: orgLoading, error: orgError }] = useLazyQuery(GET_ORGANIZATION_BY_ID);
@@ -81,13 +91,17 @@ const VolunteeringDetails = () => {
   };
 
   const handleJoinVolunteer = async () => {
+    if (!userId) {
+      alert("No se ha encontrado el ID del usuario. Por favor, inicia sesión nuevamente.");
+      return;
+    }
     try {
       await addUserToVolunteer({
         variables: {
-          volunteerId: fixedVolunteerId,
-          userId: fixedUserId,
-          role: "volunteer",
-          approved: false,
+          volunteerId: volunteerId,
+          userId: cleanedUserId,
+          role: "voluntario",
+          approved: true,
         },
       });
       alert("¡Te has unido al voluntariado exitosamente!");
@@ -102,8 +116,32 @@ const VolunteeringDetails = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   const volunteer = data.getVolunteerById;
+
   const organizationName = orgData?.getOrganizationById?.name || "Desconocido";
-  const formattedDate = new Date(Number(volunteer.date)).toLocaleDateString("es-ES", {
+  const organizationEmail = orgData?.getOrganizationById?.email || "Desconocido";
+  const organizationPhone = orgData?.getOrganizationById?.phone || "Desconocido";
+  const organizationAddress = orgData?.getOrganizationById?.address || "Desconocido";
+  
+  const { title, location, totalVac, category, tags} = volunteer;
+
+
+  const formattedTags =
+  tags?.tag && tags?.tag > 0
+    ? tags?.tag.join(", ")
+    : "No especificado";
+  
+    const formattedDateCreate = new Date(Number(volunteer.date_create)).toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const formattedDateStart = new Date(Number(volunteer.date_start)).toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const formattedDateEnd = new Date(Number(volunteer.date_end)).toLocaleDateString("es-ES", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -135,38 +173,25 @@ const VolunteeringDetails = () => {
               {/* Join */}
               <div className="py-3 sm:order-none order-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Información
+                  Información de la Organización
                 </h2>
                 <div className="border-2 w-20 border-top-color my-3"></div>
                 <div>
                   <div className="flex items-center my-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-blue-600">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
-                      </svg>
-                    <div>{formattedDate}</div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    <div> {organizationName}</div>
                   </div>
                   <div className="flex items-center my-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-blue-600">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                  </svg>
-                    <div>¡Es Flexible! Nos acomodamos a tu horario.</div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><div> {organizationEmail}</div>
+                  </div>
+                  <div className="flex items-center my-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <div> {organizationPhone}</div>
+                  </div>
+                  <div className="flex items-center my-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg><div> {organizationAddress}</div>
                   </div>
                 </div>
-              </div>
-
-              {/* Address */}
-              <div className="py-3 sm:order-none order-2">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Dirección
-                </h2>
-                <div className="border-2 w-20 border-top-color my-3"></div>
-                <div className="flex items-center my-2">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-blue-600">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                </svg>
-                    <div>{volunteer.location}</div>
-                  </div>
               </div>
 
               {/* Join Program */}
@@ -180,45 +205,21 @@ const VolunteeringDetails = () => {
             </div>
 
             <div className="flex flex-col pr-12 sm:w-2/3 order-first sm:order-none sm:-mt-10">
-              {/* About The Program */}
-              <div className="py-3">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Sobre el programa
-                </h2>
-                <div className="border-2 w-20 border-top-color my-3"></div>
-                <p>
-                  El Voluntariado RSU desde la PUCP busca responder a diversos desafíos de la sostenibilidad social y ambiental, aportando al logro de los Objetivos de Desarrollo Sostenible (ODS) de la Agenda 20230. Además, se trata de una experiencia formativa pues es una oportunidad para que nuestra comunidad universitaria pueda aprender, desde una experiencia solidaria, en contextos territorialmente situados y en vínculo con grupos, comunidades u organizaciones, acompañadas/os por docentes, personal administrativo o gestoras/es de organizaciones comprometidas/os con el enfoque.
-                </p>
-                <p>
-                  Desde la RSU, el voluntariado busca el ejercicio de una ciudadanía activa que trabaje de la mano con la posibilidad de intervenir, plantear soluciones e involucrarse con la realidad de manera sostenida. Se espera que las y los voluntarios sean agentes de transformación social, a partir de sus intervenciones y contribuyan a generar impactos positivos en su entorno.
-                </p>
-              </div>
-
-              {/* Requirements and indications */}
-              <div className="py-3">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Requisitos e Indicaciones
-                </h2>
-                <div className="border-2 w-20 border-top-color my-3"></div>
-                  <p>
-                  Toda propuesta que forme parte del Programa de Voluntariado RSU desde la PUCP y que pueda ser gestionada por agrupaciones estudiantiles PUCP, unidades PUCP o por organizaciones externas, deberá garantizar un conjunto de condiciones básicas para su incorporación en el Programa:
-                  </p>
-                <div className="flex flex-col">
-                  <RequirementField
-                    title="RELACIÓN CON EL DESARROLLO HUMANO SOSTENIBLE"
-                    description="Responder a una problemática acotada y que se aborde desde una mirada real y reflexiva; dialogando con los enfoques de género, sostenibilidad, interculturalidad y/o territorial."
+              <div className="w-full my-auto py-6 flex flex-col justify-center gap-2">
+                <div className="w-full flex sm:flex-row xs:flex-col gap-2 justify-center">
+                  <DetailsColumn
+                    details={[
+                      { title: 'Dia Inicio', value: formattedDateStart},
+                      { title: 'Ubicación', value: volunteer.location},
+                      { title: 'Tags', value: formattedTags},
+                    ]}
                   />
-                  <RequirementField
-                    title="VÍNCULO HORIZONTAL"
-                    description="Mantener un vínculo desde el respeto y diálogo participativo con el grupo humano con el que se trabaje, considerando la devolución de aprendizajes al cierre de la experiencia."
-                  />
-                  <RequirementField
-                    title="CAPACITACIÓN"
-                    description="Brindar sesiones de inducción y capacitación adecuadas sobre los objetivos, temporalidad, roles a asumir, beneficios, límites de participación y herramientas suficientes para desarrollar las actividades."
-                  />
-                  <RequirementField
-                    title="ACOMPAÑAMIENTO"
-                    description="Brindar acompañamiento que permita la reflexión y diálogo sobre la labor voluntaria: aprendizajes y retos a nivel personal-emocional, profesional y ciudadano; y atención de situaciones problemáticas o conflictivas."
+                  <DetailsColumn
+                    details={[
+                      { title: 'Día Fin', value: formattedDateEnd},
+                      { title: 'Categoria', value: volunteer.category},
+                      { title: 'Vacantes', value: volunteer.totalVac},
+                    ]}
                   />
                 </div>
               </div>
@@ -226,7 +227,7 @@ const VolunteeringDetails = () => {
           </div>
         </div>
       </div>
-
+    
       {/* Modal */}
       {isModalOpen && (
         <div id="popup-modal" tabIndex="-1" className="fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50">
