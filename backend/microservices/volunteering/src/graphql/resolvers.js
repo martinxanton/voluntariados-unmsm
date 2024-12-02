@@ -19,6 +19,9 @@ module.exports = {
   },
   //agreagr otro resolver
   Volunteer: {
+    __resolveReference: async (reference) => {
+      return await Volunteer.findById(reference.id)
+    },
     organization: async (volunteer) => {
       try {
         return await Organization.findById(volunteer.organization);
@@ -51,6 +54,10 @@ module.exports = {
   },
 
   Organization: {
+    __resolveReference: async (reference) => {
+      return await Organization.findById(reference.id);
+    },
+
     adminId: (organization) => {
       return { __typename: "User", id: organization.adminId };
     },
