@@ -6,14 +6,18 @@ import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 const REGISTER_MUTATION = gql`
-  mutation registerUser($email: String!, $password: String!, $codigoUniversitario: String!, $username: String!, $nombre: String!, $apellido: String!) {
-    registerUser(email: $email, password: $password, codigoUniversitario: $codigoUniversitario, username: $username, nombre: $nombre, apellido: $apellido) {
-      id
+  mutation registerUser($email: String!, $password: String!, $codigoUniversitario: String!, $username: String!, $nombre: String!, $apellido: String!, $carrera: String!, $edad: Int!, $sexo: String!, $distrito: String!, $description: String!) {
+    registerUser(email: $email, password: $password, codigoUniversitario: $codigoUniversitario, username: $username, nombre: $nombre, apellido: $apellido, carrera: $carrera, edad: $edad, sexo: $sexo, distrito: $distrito, description: $description) {
       email
       username
       codigoUniversitario
       nombre
       apellido
+      carrera
+      edad
+      sexo
+      distrito
+      description
     }
   }
 `;
@@ -27,6 +31,11 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
+  const [carrera, setCarrera] = useState("");
+  const [edad, setEdad] = useState("");
+  const [sexo, setSexo] = useState("");
+  const [distrito, setDistrito] = useState("");
+  const [description, setDescription] = useState("");
   const navigate = useNavigate();
   const [registerUser] = useMutation(REGISTER_MUTATION);
   const [error2, setError2] = useState(null);
@@ -36,27 +45,36 @@ const Register = () => {
     setError2(null);
     try {
       if (password !== repassword) {
-        console.error("Passwords do not match");
         setError2("Las contraseñas no coinciden");
         return;
       }
   
-      const { data } = await registerUser({ 
-        variables: { 
-          email, 
-          password, 
-          codigoUniversitario, 
-          username, 
-          nombre: nombre, 
-          apellido 
-        } 
+      const edadInt = parseInt(edad, 10);
+      if (isNaN(edadInt)) {
+        setError2("La edad debe ser un número válido.");
+        return;
+      }
+  
+      const { data } = await registerUser({
+        variables: {
+          email,
+          password,
+          codigoUniversitario,
+          username,
+          nombre,
+          apellido,
+          carrera,
+          edad: edadInt,
+          sexo, // Usa el valor mapeado
+          distrito,
+          description,
+        },
       });
   
       console.log("Registro exitoso");
       console.log(data.registerUser);
       navigate("../");
     } catch (e) {
-      console.error("Error en el registro:", e.message);
       setError2("Error en el registro: " + e.message);
     }
   };
@@ -94,22 +112,62 @@ const Register = () => {
                 value = {email}
                 onChange={(e) => setEmail(e.target.value)}
                 />
+
                 <AuthInputField label="Código de estudiante" type="text" name="name" placeholder="20200258"
                 value={codigoUniversitario}
                 onChange={(e) => setCodigoUniversitario(e.target.value)}
                 />
+
                 <AuthInputField label="Contraseña" type="password" name="password" placeholder="**********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 />
+
                 <AuthInputField label="Confirma contraseña" type="password" name="cpassword" placeholder="**********"
                 value = {repassword}
                 onChange={(e) => setRepassword(e.target.value)}
                 />
 
-                <AuthInputField label="Username" type="text" name="name" placeholder="Darkras"
+                <AuthInputField label="Username" type="text" name="name" placeholder="Chupetin Trujillo"
                 value = {username}
                 onChange={(e) => setUsername(e.target.value)}
+                />
+
+                <AuthInputField label="Carrera" type="text" name="name" placeholder="Ing de Software"
+                value = {carrera}
+                onChange={(e) => setCarrera(e.target.value)}
+                />
+
+                <AuthInputField label="Edad" type="text" name="name" placeholder="20"
+                value = {edad}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (!isNaN(value) && Number.isInteger(Number(value))) {
+                    setEdad(value);
+                  }
+                }}
+                />
+
+                <div>
+                  <label class="text-gray-800 text-sm mb-2 block font-bold">Sexo</label>
+                  <select
+                    value={sexo}
+                    onChange={(e) => setSexo(e.target.value)}
+                  >
+                    <option value="" disabled>Selecciona tu sexo</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                  </select>
+                </div>
+
+                <AuthInputField label="Distrito" type="text" name="name" placeholder="Miraflores"
+                value = {distrito}
+                onChange={(e) => setDistrito(e.target.value)}
+                />
+
+                <AuthInputField label="Descripción" type="text" name="name" placeholder="Soy estudiante de la UNMSM y voy en 5to ciclo"
+                value = {description}
+                onChange={(e) => setDescription(e.target.value)}
                 />
 
               </div>
