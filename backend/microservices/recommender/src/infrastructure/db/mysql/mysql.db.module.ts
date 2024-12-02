@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { IConfigService } from '../../../domain/services/config.service.interface';
 import { createPool } from 'mysql2/promise';
-import { RecommendationRepository } from './recommendation.repository.impl';
-import { StudentRepository } from './student.repository.impl';
-import { RecommendationLineRepository } from './recommendation.line.repository.impl';
+import { VolRecommendationRepository } from './volunteering.recommendation.repository.impl';
+import { UserRepository } from './user.repository.impl';
+import { VolRecommendationLineRepository } from './volunteering.recommendation.line.repository.impl';
 import { TensorflowModule } from '../tensorflow/tensorflow.module';
+import { VolunteeringRepository } from './volunteering.repository.impl';
+import { UsrRecommendationRepository } from './user.recommendation.repository.impl';
+import { UsrRecommendationLineRepository } from './user.recommendation.line.repository.impl';
 
 @Module({
   imports: [TensorflowModule],
@@ -26,23 +29,38 @@ import { TensorflowModule } from '../tensorflow/tensorflow.module';
       inject: ['IConfigService'],
     },
     {
-      provide: 'IRecommendationRepository',
-      useClass: RecommendationRepository,
+      provide: 'IVolRecommendationRepository',
+      useClass: VolRecommendationRepository,
     },
     {
-      provide: 'IRecommendationLineRepository',
-      useClass: RecommendationLineRepository,
+      provide: 'IVolRecommendationLineRepository',
+      useClass: VolRecommendationLineRepository,
     },
     {
-      provide: 'IStudentRepository',
-      useClass: StudentRepository,
+      provide: 'IUsrRecommendationRepository',
+      useClass: UsrRecommendationRepository,
+    },
+    {
+      provide: 'IUsrRecommendationLineRepository',
+      useClass: UsrRecommendationLineRepository,
+    },
+    {
+      provide: 'IUserRepository',
+      useClass: UserRepository,
+    },
+    {
+      provide: 'IVolunteeringRepository',
+      useClass: VolunteeringRepository,
     },
   ],
   exports: [
     'DB_CONNECTION',
-    'IRecommendationRepository',
-    'IRecommendationLineRepository',
-    'IStudentRepository',
+    'IVolRecommendationRepository',
+    'IUsrRecommendationRepository',
+    'IVolRecommendationLineRepository',
+    'IUsrRecommendationLineRepository',
+    'IUserRepository',
+    'IVolunteeringRepository',
   ],
 })
 export class MysqlDbModule {}

@@ -1,36 +1,36 @@
-import { Student } from '../../../domain/models/student.model';
-import { Recommendation } from '../../../domain/models/recommendation.model';
-import { IRecommendationRepository } from '../../../domain/repositories/recommendation.repository.interface';
-import { Program } from '../../../domain/models/program.model';
-import { RecommendationLine } from '../../../domain/models/recommendation.line.model';
+import { User } from '../../../domain/models/user.model';
+import { VolRecommendation } from '../../../domain/models/volunteering.recommendation.model';
+import { IVolRecommendationRepository } from '../../../domain/repositories/volunteering.recommendation.repository.interface';
+import { Volunteering } from '../../../domain/models/volunteering.model';
+import { VolRecommendationLine } from '../../../domain/models/volunteering.recommendation.line.model';
 
-export class MockRecommendationRepository implements IRecommendationRepository {
-  private recommendations: Recommendation[] = [];
+export class MockRecommendationRepository implements IVolRecommendationRepository {
+  private recommendations: VolRecommendation[] = [];
 
   constructor() {}
 
-  create(recommendation: Recommendation): Promise<Recommendation> {
+  create(recommendation: VolRecommendation): Promise<VolRecommendation> {
     this.recommendations.push(recommendation);
     return Promise.resolve(recommendation);
   }
 
-  fetchByStudent(student: Student): Promise<Recommendation> {
-    const recommendation = new Recommendation(student);
+  fetchByUser(student: User): Promise<VolRecommendation> {
+    const recommendation = new VolRecommendation(student);
     recommendation.lines.push(
-      new RecommendationLine(recommendation, new Program(1), 10.0),
+      new VolRecommendationLine(recommendation, new Volunteering(1), 10.0),
     );
     return Promise.resolve(recommendation);
   }
 
-  findById(id: number): Promise<Recommendation | null> {
+  findById(id: number): Promise<VolRecommendation | null> {
     return Promise.resolve(
-      this.recommendations.find((r) => r.student.id === id),
+      this.recommendations.find((r) => r.user.id === id),
     );
   }
 
-  findLatestByStudent(student: Student): Promise<Recommendation | null> {
+  findLatestByUser(student: User): Promise<VolRecommendation | null> {
     return Promise.resolve(
-      this.recommendations.find((r) => r.student.id === student.id),
+      this.recommendations.find((r) => r.user.id === student.id),
     );
   }
 }

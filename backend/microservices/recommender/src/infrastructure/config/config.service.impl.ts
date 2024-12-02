@@ -29,9 +29,25 @@ export class AppConfigService implements IConfigService {
   get recommendationRefreshDays(): number {
     return this.configService.get<number>('RECOMMENDATION_REFRESH_DAYS', 1);
   }
+  
+  get userServiceUrl(): string {
+    return this.configService.get<string>('USER_SERVICE_URL');
+  }
+  
+  get volunteeringServiceUrl(): string {
+    return this.configService.get<string>('VOLUNTEERING_SERVICE_URL');
+  }
 
   get modelServingUrl(): string {
     return this.configService.get<string>('MODEL_SERVING_URL');
+  }
+  
+  get modelVolunteering(): string {
+    return this.configService.get<string>('MODEL_VOLUNTEERING');
+  }
+  
+  get modelUser(): string {
+    return this.configService.get<string>('MODEL_USER');
   }
 
   get port(): number {
