@@ -2,22 +2,6 @@ const Volunteer = require("../models/volunteer");
 const Organization = require("../models/organization"); // Importamos el modelo de organización
 
 module.exports = {
-  // Resolver para User (entidad externa)
-  User: {
-    __resolveReference(reference) {
-      return reference;
-    },
-  },
-  //agregado
-  Activity: {
-    users: (activity) => {
-      return activity.users.map((user) => ({
-        userId: { __typename: "User", id: user.userId },
-        score: user.score,
-      }));
-    },
-  },
-  //agreagr otro resolver
   Volunteer: {
     __resolveReference: async (reference) => {
       return await Volunteer.findById(reference.id)
@@ -29,18 +13,8 @@ module.exports = {
         throw new Error("Failed to fetch organization for the volunteer");
       }
     },
-    users: (volunteer) => {
-      return volunteer.users.map((user) => ({
-        userId: { __typename: "User", id: user.userId },
-        role: user.role,
-        approved: user.approved,
-      }));
-    },
-    activities: (volunteer) => {
-      volunteer.activities;
-    },
   },
-
+  
   UserVolunteer: {
     userId: (userVolunteer) => {
       return { __typename: "User", id: userVolunteer.userId };
@@ -52,6 +26,7 @@ module.exports = {
       return { __typename: "User", id: userActivity.userId };
     },
   },
+  
 
   Organization: {
     __resolveReference: async (reference) => {

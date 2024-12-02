@@ -12,13 +12,13 @@ module.exports = gql`
       location: String!
       totalVac: Int!
       category: String!
-      tags: [String!]!
-      users: [UserVolunteer!]!
-      activities: [Activity!]!
+      tags: [String!]
+      users: [UserVolunteer!]
+      activities: [Activity!]
     }
 
-    extend type User @key(fields: "id") {
-      id: ID! @external
+    type User @key(fields: "id") {
+      id: ID!
     }
 
     type UserVolunteer {
@@ -35,7 +35,7 @@ module.exports = gql`
       score: Int!
       name: String!
       description: String!
-      users: [UserActivity!]!
+      users: [UserActivity!]
     }
 
     type UserActivity {
