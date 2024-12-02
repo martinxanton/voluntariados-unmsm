@@ -37,9 +37,21 @@ const AppRoutes = () => {
 
       {/* Estos links son dinamicos pero se usaran con estas url para seguir diseñando las interfaces */}
 
-      <Route path="/volunteering-details" element={<VolunteeringDetails />} />
-      <Route path="/volunteering-register" element={<VolunteeringRegister />} />
-      <Route path="/volunteering-tracking" element={<VolunteeringTracking />} />
+      <Route path="/:id/details" element={
+        <ProtectedRoute>
+          <VolunteeringDetails />
+        </ProtectedRoute>
+      } />
+      <Route path="/:id/register" element={
+        <ProtectedRoute>
+          <VolunteeringRegister />
+        </ProtectedRoute>
+      } />
+      <Route path="/:id/tracking" element={
+        <ProtectedRoute>
+          <VolunteeringTracking />
+        </ProtectedRoute>
+      } />
       <Route
         path="/dashboard-volunteering"
         element={<DashboardVolunteering />}
