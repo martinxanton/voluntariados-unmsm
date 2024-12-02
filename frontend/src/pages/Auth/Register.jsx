@@ -1,7 +1,7 @@
 import AuthInputField from "../../components/AuthInputField.jsx";
 import AuthButton from "../../components/AuthButton.jsx";
 import AuthLinkText from "../../components/AuthLinkText.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
@@ -39,6 +39,13 @@ const Register = () => {
   const navigate = useNavigate();
   const [registerUser] = useMutation(REGISTER_MUTATION);
   const [error2, setError2] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("userId");
+    if (token) {
+      navigate("/search");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -149,7 +156,7 @@ const Register = () => {
                 />
 
                 <div>
-                  <label class="text-gray-800 text-sm mb-2 block font-bold">Sexo</label>
+                  <label className="text-gray-800 text-sm mb-2 block font-bold">Sexo</label>
                   <select
                     value={sexo}
                     onChange={(e) => setSexo(e.target.value)}

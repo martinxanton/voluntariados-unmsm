@@ -1,7 +1,7 @@
 import AuthInputField from "../../components/AuthInputField.jsx";
 import AuthButton from "../../components/AuthButton.jsx";
 import AuthLinkText from "../../components/AuthLinkText.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
@@ -21,6 +21,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loginUser, { loading, error }] = useMutation(LOGIN_MUTATION);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("userId");
+    if (token) {
+      navigate("/search");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
