@@ -37,7 +37,12 @@ const GET_VOLUNTEERS = gql`
 const GET_USERS_BY_VOLUNTEER = gql`
   query getUsersByVolunteer($id: ID!) {
     getUsersByVolunteer(id: $id) {
-      userId
+      userId {
+        id
+        nombre
+        apellido
+        email
+      }
       role
       approved
     }
@@ -63,13 +68,23 @@ const GET_VOLUNTEERS_BY_ORGANIZATION = gql`
   }
 `;
 
+const GET_ACTIVITIES_BY_VOLUNTEER = gql`
+  query getActivitiesByVolunteer($id: ID!) {
+    getActivitiesByVolunteer(id: $id) {
+      id
+      name
+      description
+    }
+  }
+`;
+
 const DashboardVolunteering = () => {
   const [selectedProgram, setSelectedProgram] = useState("all");
   const [selectedOrganization, setSelectedOrganization] = useState("");
   const [volunteersByOrg, setVolunteersByOrg] = useState([]);
+  const [filteredVolunteers, setFilteredVolunteers] = useState([]);
+  const [activities, setActivities] = useState([]);
 
-  const [volunteers] = useState([]);
-  
   const [totals, setTotals] = useState({
     users: 0, // Usuarios aprobados
     disapprovedUsers: 0, // Usuarios desaprobados
@@ -98,6 +113,30 @@ const DashboardVolunteering = () => {
 
   const [getUsersByVolunteer] = useLazyQuery(GET_USERS_BY_VOLUNTEER);
 
+  // Obtener actividades por voluntariado
+  const [
+    fetchActivitiesByVolunteer,
+    { data: activitiesData, loading: loadingActivities },
+  ] = useLazyQuery(GET_ACTIVITIES_BY_VOLUNTEER);
+
+  // Actualizar actividades cuando lleguen nuevos datos
+  useEffect(() => {
+    if (activitiesData?.getActivitiesByVolunteer) {
+      setActivities(activitiesData.getActivitiesByVolunteer);
+    }
+  }, [activitiesData]);
+
+  // Manejar la selección de un programa en el dropdown
+  const handleProgramChange = (programId) => {
+    setSelectedProgram(programId);
+
+    if (programId === "all") {
+      setActivities([]); // Limpiar actividades si se selecciona "Todos"
+    } else {
+      fetchActivitiesByVolunteer({ variables: { id: programId } }); // Obtener actividades relacionadas
+    }
+  };
+
   // Actualizar la lista de voluntarios por organización
   useEffect(() => {
     if (volunteersByOrgData?.getVolunteersByOrganization) {
@@ -110,8 +149,41 @@ const DashboardVolunteering = () => {
     fetchVolunteersByOrganization({ variables: { id: organizationId } });
   };
 
-  if (loadingOrganizations) return "Cargando organizaciones...";
-  if (errorOrganizations) return <pre>{errorOrganizations.message}</pre>;
+  useEffect(() => {
+    const fetchVolunteersByProgram = async () => {
+      if (selectedProgram === "all") {
+        // Si es "Todos", muestra todos los programas
+        setFilteredVolunteers(volunteersData?.getVolunteers || []);
+      } else {
+        // Filtra los usuarios por el programa seleccionado
+        try {
+          const { data: usersData } = await getUsersByVolunteer({
+            variables: { id: selectedProgram },
+          });
+
+          if (usersData?.getUsersByVolunteer) {
+            // Mapear los usuarios al formato esperado
+            const volunteersList = usersData.getUsersByVolunteer.map(
+              (user) => ({
+                nombre: user.userId.nombre,
+                apellido: user.userId.apellido,
+                email: user.userId.email,
+                program: volunteersData.getVolunteers.find(
+                  (vol) => vol.id === selectedProgram
+                )?.title,
+              })
+            );
+
+            setFilteredVolunteers(volunteersList);
+          }
+        } catch (error) {
+          console.error("Error al obtener voluntarios por programa:", error);
+        }
+      }
+    };
+
+    fetchVolunteersByProgram();
+  }, [selectedProgram, volunteersData, getUsersByVolunteer]);
 
   // Calcular usuarios aprobados y desaprobados
   useEffect(() => {
@@ -217,10 +289,11 @@ const DashboardVolunteering = () => {
     },
   };
 
-  if (loadingVolunteers || loadingOrganizations) return "Cargando...";
-  if (errorVolunteers || errorOrganizations)
-    return <pre>{(errorVolunteers || errorOrganizations).message}</pre>;
-  if (!volunteersData) return <div>No se encontraron programas</div>;
+  if (loadingVolunteers) return "Cargando voluntariados...";
+  if (errorVolunteers) return <pre>{errorVolunteers.message}</pre>;
+  if (loadingOrganizations || loadingVolunteers) return <p>Cargando...</p>;
+  if (errorOrganizations || errorVolunteers)
+    return <pre>{(errorOrganizations || errorVolunteers).message}</pre>;
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -277,12 +350,11 @@ const DashboardVolunteering = () => {
         {activeSection === "content" && (
           <div>
             <h2 className="text-2xl font-bold p-4 bg-blue-600 text-white rounded-t-lg">
-              Voluntarios por Organización
+              Voluntariados por Organización
             </h2>
             <div className="p-6 bg-white shadow-md rounded-b-lg">
               <p className="text-gray-600 mb-4 text-sm">
-                Seleccione una organización para ver la lista de sus
-                voluntarios.
+                Seleccione una organización para ver la lista de sus programas.
               </p>
 
               {/* Filtro por organización */}
@@ -314,7 +386,7 @@ const DashboardVolunteering = () => {
                   <thead>
                     <tr className="bg-gray-100">
                       <th className="px-6 py-3 text-sm font-medium text-gray-700">
-                        Título
+                        Voluntariado
                       </th>
                       <th className="px-6 py-3 text-sm font-medium text-gray-700">
                         Ubicación
@@ -347,25 +419,30 @@ const DashboardVolunteering = () => {
         )}
         {activeSection === "volunteers" && (
           <div>
-            <h2 className="text-lg font-semibold p-4 border-b">Voluntarios</h2>
+            <h2 className="text-2xl font-bold p-4 bg-blue-600 text-white rounded-t-lg">
+              Voluntarios
+            </h2>
             <div className="p-4 bg-white rounded shadow">
-              <p className="mt-2 text-gray-500">Listado de voluntarios</p>
+              <p className="mt-2 text-gray-500">
+                Seleccione un programa de voluntariado para ver la lista sus
+                voluntarios.
+              </p>
 
               {/* Filtros */}
               <div className="mt-4">
                 <label
                   htmlFor="programFilter"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 pb-2"
                 >
                   Filtrar por programa:
                 </label>
                 <select
                   id="programFilter"
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   value={selectedProgram}
                   onChange={(e) => setSelectedProgram(e.target.value)}
                 >
-                  <option value="all">Todos</option>
+                  <option value="all">Seleccione un voluntariado</option>
                   {volunteersData.getVolunteers.map((program) => (
                     <option key={program.id} value={program.id}>
                       {program.title}
@@ -383,6 +460,9 @@ const DashboardVolunteering = () => {
                         Nombre
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Apellido
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Programa
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -391,10 +471,13 @@ const DashboardVolunteering = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {volunteers.map((volunteer) => (
-                      <tr key={volunteer.name}>
+                    {filteredVolunteers.map((volunteer, index) => (
+                      <tr key={index}>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          {volunteer.name}
+                          {volunteer.nombre}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {volunteer.apellido}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {volunteer.program}
@@ -408,6 +491,70 @@ const DashboardVolunteering = () => {
                 </table>
               </div>
             </div>
+          </div>
+        )}
+        {activeSection === "activities" && (
+          <div>
+            <h2 className="text-2xl font-bold p-4 bg-blue-600 text-white rounded-t-lg">
+              Actividades por voluntariado
+            </h2>
+
+            {/* Dropdown para seleccionar un programa */}
+            <div className="mt-4">
+              <label
+                htmlFor="programFilter"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Filtrar por programa:
+              </label>
+              <select
+                id="programFilter"
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                value={selectedProgram}
+                onChange={(e) => handleProgramChange(e.target.value)}
+              >
+                <option value="all">Todos</option>
+                {volunteersData.getVolunteers.map((program) => (
+                  <option key={program.id} value={program.id}>
+                    {program.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Tabla de actividades */}
+            {loadingActivities ? (
+              <p className="mt-4">Cargando actividades...</p>
+            ) : activities.length > 0 ? (
+              <table className="min-w-full mt-4 bg-white border">
+                <thead>
+                  <tr>
+                    <th className="py-2 px-4 border">ID</th>
+                    <th className="py-2 px-4 border">Nombre</th>
+                    <th className="py-2 px-4 border">Descripción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {activities.map((activity) => (
+                    <tr key={activity.id}>
+                      <td className="py-2 px-4 border">{activity.id}</td>
+                      <td className="py-2 px-4 border">{activity.name}</td>
+                      <td className="py-2 px-4 border">
+                        {activity.description}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : selectedProgram !== "all" ? (
+              <p className="mt-4 text-gray-500">
+                No hay actividades para este programa.
+              </p>
+            ) : (
+              <p className="mt-4 text-gray-500">
+                Selecciona un programa para ver sus actividades.
+              </p>
+            )}
           </div>
         )}
       </main>
