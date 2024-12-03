@@ -19,7 +19,7 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route
-        path="/profiler-user"
+        path="/profile-user"
         element={
           <ProtectedRoute>
             <ProfileUser />
@@ -42,7 +42,7 @@ const AppRoutes = () => {
           <VolunteeringDetails />
         </ProtectedRoute>
       } />
-      <Route path="/:id/register" element={
+      <Route path="/volunteer-register" element={
         <ProtectedRoute>
           <VolunteeringRegister />
         </ProtectedRoute>

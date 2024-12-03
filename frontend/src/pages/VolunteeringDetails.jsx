@@ -2,6 +2,7 @@ import RequirementField from "../components/RequirementField";
 import DetailsColumn from "../components/DetailsColumn";
 import React, { useState, useEffect } from "react";
 import { gql, useMutation, useQuery, useLazyQuery  } from "@apollo/client";
+import { useParams } from "react-router"
 
 const ADD_USER_TO_VOLUNTEER = gql`
   mutation AddUserToVolunteer(
@@ -58,7 +59,9 @@ const GET_ORGANIZATION_BY_ID = gql`
   }
 `;
 
-const VolunteeringDetails = ({ id }) => {
+const VolunteeringDetails = () => {
+  const params = useParams();
+  const { id } = params;
   const volunteerId = String(id);
   const [userId, setUserId] = useState(null);
 
@@ -67,7 +70,7 @@ const VolunteeringDetails = ({ id }) => {
     setUserId(storedUserId);
   }, []);
 
-  const cleanedUserId = JSON.parse(userId);
+  const cleanedUserId = "3273ed1f7a986f3a4e705f7c";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

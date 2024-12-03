@@ -1,7 +1,8 @@
+import ThemeController from "./ThemeController";
+
 const Navbar = () => {
   // obtner Token de localstorage
   const userId = localStorage.getItem("userId");
-  console.log("userId", userId);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -83,9 +84,9 @@ const Navbar = () => {
           <li>
             <a>Item 3</a>
           </li>
-          
-          <ThemeController />
           */}
+          <ThemeController />
+          
         </ul>
         {userId ? (
           <div className="dropdown dropdown-end">
@@ -105,6 +106,9 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
+              <li>
+                <a href="/profile-user">Perfil</a>
+              </li>
               <li>
                 <a onClick={handleLogout}>Cerrar Sesión</a>
               </li>

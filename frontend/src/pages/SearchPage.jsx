@@ -1,7 +1,29 @@
 import { MaterialSymbol } from "react-material-symbols";
 import CardIcon from "../components/CardIcon";
 import CardVolunteering from "../components/CardVolunteering";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gql, useQuery } from "@apollo/client";
+
+const GET_VOLUNTEERING = gql`
+  query {
+    getVolunteers {
+      id
+      title
+      organization{
+        name
+      }
+      date_create
+      date_start
+      date_end
+      location
+      totalVac
+      category
+      tags
+      users{
+        approved
+      }
+}}
+`
 
 const CategoryList = [
   "Animales",
@@ -124,11 +146,24 @@ const volunteeringList = [
 ];
 
 const SearchPage = () => {
-  const [filteredVolunteering, setFilteredVolunteering] =
-    useState(volunteeringList);
+  // eslint-disable-next-line no-unused-vars
+  const [filteredVolunteering, setFilteredVolunteering] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [locationQuery, setLocationQuery] = useState("");
   const [categoryQuery, setCategoryQuery] = useState([]);
+  const { loading, error, data } = useQuery(GET_VOLUNTEERING);
+
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  
+  const volunteeringListNew = data.getVolunteers;
+  console.log(volunteeringListNew[0].id);
+
+  if (filteredVolunteering.length === 0) {
+    setFilteredVolunteering(volunteeringListNew);
+  }
+  
+  
 
   // Funciones para capturar los valores del input
   const handleSearchChange = (e) => {
@@ -141,7 +176,8 @@ const SearchPage = () => {
 
   // Filtrar los voluntariados en función de la búsqueda y ubicación
   const filterVolunteering = () => {
-    let filtered = volunteeringList.filter((volunteering) => {
+    setFilteredVolunteering(volunteeringListNew);
+    let filtered = volunteeringListNew.filter((volunteering) => {
       const matchesSearch = volunteering.category
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
@@ -186,7 +222,7 @@ const SearchPage = () => {
       updatedCategories = [...categoryQuery, category];
     }
     setCategoryQuery(updatedCategories);
-    const result = volunteeringList.filter((volunteering) => {
+    const result = volunteeringListNew.filter((volunteering) => {
       return updatedCategories.includes(volunteering.category);
     });
     setFilteredVolunteering(result);
@@ -281,13 +317,13 @@ const SearchPage = () => {
                 {filteredVolunteering.map((volunteering, index) => (
                   <div key={index}>
                     <CardVolunteering
-                      photo={volunteering.photo}
+                      id={volunteering.id}
                       title={volunteering.title}
-                      organization={volunteering.organization}
-                      date={volunteering.date}
+                      organization={volunteering.organization.name}
+                      date={ new Date(Number(volunteering.date_start)).toLocaleDateString()}
                       location={volunteering.location}
                       totalVac={volunteering.totalVac}
-                      filledVac={volunteering.filledVac}
+                      filledVac={volunteering.users.length}
                     />
                   </div>
                 ))}
