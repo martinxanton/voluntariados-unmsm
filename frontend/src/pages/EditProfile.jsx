@@ -78,7 +78,7 @@ const EditProfile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
+    const storedUserId = "674d6a55e395e6f5c9acea8e";
     setUserId(storedUserId);
   }, []);
 

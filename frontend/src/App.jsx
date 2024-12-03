@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 
 function App() {
   const location = useLocation();
-  const hideNavbarFooter = location.pathname === "/login" || location.pathname === "/register";
+  const hideNavbarFooter = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/dashboard-volunteering";
 
   return (
     <>

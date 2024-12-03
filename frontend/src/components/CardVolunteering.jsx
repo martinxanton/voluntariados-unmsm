@@ -2,7 +2,8 @@ import { MaterialSymbol } from "react-material-symbols";
 import PropTypes from "prop-types";
 
 const CardVolunteering = ({
-  photo = "https://via.placeholder.com/300",
+  id,
+  photo = "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
   title,
   organization,
   date,
@@ -18,15 +19,15 @@ const CardVolunteering = ({
         <img src={photo} alt="Shoes" className="object-cover h-full w-full" />
       </figure>
       <div className="card-body p-5">
-        <h1 className="text-xl font-medium">{title}</h1>
-        <h2 className="text-sm font-bold">{organization}</h2>
+        <h1 className="text-xl font-bold ">{title}</h1>
+        <h2 className="text-sm font-bold text-neutral-800">{organization}</h2>
         <div className="flex gap-2 items-center">
           <MaterialSymbol
             icon="calendar_month"
             size={20}
             fill
             grade={-25}
-            color="text-neutral-500"
+            color="black"
           />
           <p>{date}</p>
         </div>
@@ -45,7 +46,9 @@ const CardVolunteering = ({
           <p>{availableVac}</p>
         </div>
         <div className="card-actions justify-around flex pt-2 mt-auto">
-          <button className="btn btn-primary flex-1">Únete</button>
+          <a className="btn btn-primary flex-1" href={
+            `/${id}/details`
+          }>Únete</a>
           <button className="btn btn-outline btn-primary flex-1">
             Compartir
           </button>
@@ -56,6 +59,7 @@ const CardVolunteering = ({
 };
 
 CardVolunteering.propTypes = {
+  id: PropTypes.string.isRequired,
   photo: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   organization: PropTypes.string.isRequired,
