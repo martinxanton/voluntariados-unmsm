@@ -187,7 +187,7 @@ const Register = () => {
               </div>
               <p className="text-gray-800 text-base !mt-8 text-center">
                 ¿Ya tienes cuenta?
-                <AuthLinkText text="Iniciar sesión" href="/login"/>
+                <AuthLinkText text=" Iniciar sesión" href="/login"/>
               </p>
             </form>
           </div>
