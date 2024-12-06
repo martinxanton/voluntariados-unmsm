@@ -27,9 +27,6 @@ const GET_USER_BY_ID = gql`
   }
 `;
 
-
-//const ProfileUser = ({ id }) => {
-
 const ProfileUser = () => {
 
   const fixedId = "674d6a55e395e6f5c9acea8e";

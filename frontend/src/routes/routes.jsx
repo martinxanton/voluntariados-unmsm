@@ -41,28 +41,28 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/create-organisation"
+        path="/create-organization"
         element={
             <CreateOrganisation/>
         }
       />
 
+      {/* Estos links son dinamicos pero se usaran con estas url para seguir diseñando las interfaces */}
+
+
       <Route
-        path="/profile-organisation"
+        path="/:organizationId/profile-organization"
         element={
             <ProfileOrganisation/>
         }
       />
 
       <Route
-        path="/edit-organisation"
+        path="/:organizationId/edit-organization"
         element={
             <EditOrganisation/>
         }
       />
-      
-
-      {/* Estos links son dinamicos pero se usaran con estas url para seguir diseñando las interfaces */}
 
       <Route path="/:id/details" element={
         <ProtectedRoute>

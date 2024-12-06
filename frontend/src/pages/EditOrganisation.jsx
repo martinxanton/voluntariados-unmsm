@@ -2,7 +2,7 @@ import AuthInputField from "../components/AuthInputField.jsx";
 import AuthButton from "../components/AuthButton.jsx";
 import { useEffect, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // Query para obtener los datos de la organización
 const GET_ORGANIZATION_BY_ID = gql`
@@ -49,7 +49,7 @@ const UPDATE_ORGANIZATION_MUTATION = gql`
 `;
 
 const EditOrganisation = () => {
-  const [organizationId, setOrganizationId] = useState(null);
+  //const [organizationId, setOrganizationId] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -58,11 +58,15 @@ const EditOrganisation = () => {
   const [error2, setError2] = useState(null);
   const navigate = useNavigate();
 
+	const { organizationId } = useParams();
+  console.log(organizationId);
+  
+  /*
   useEffect(() => {
     const storedOrganizationId = "67527ef4b1e7c6ab6d928b12"; // ID de prueba
     setOrganizationId(storedOrganizationId);
   }, []);
-
+  */
   const { loading, error, data } = useQuery(GET_ORGANIZATION_BY_ID, {
     variables: { id: organizationId },
     skip: !organizationId, // Evita ejecutar la consulta si no hay ID
