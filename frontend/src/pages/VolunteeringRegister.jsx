@@ -29,6 +29,34 @@ const CREATE_VOLUNTEER = gql`
   }
 `;
 
+const GENERATE_RECOMMENDATION = gql`
+  mutation generateUserRecommendation($volunteeringId: ID!) {
+    generateUserRecommendation(volunteeringId: $volunteeringId) {
+      lines {
+        user {
+          id
+        }
+      }
+    }
+  }
+`;
+
+const CREATE_USER_NOTIFICATION = gql`
+  mutation addNotification(
+    $idUsuario: ID!
+    $categoria: String!
+    $mensaje: String!
+  ) {
+    addNotification(
+      idUsuario: $idUsuario
+      categoria: $categoria
+      mensaje: $mensaje
+    ) {
+      id
+    }
+  }
+`;
+
 const CategoryList = [
   "Animales",
   "Arte y Cultura",
@@ -54,10 +82,8 @@ const VolunteeringRegister = () => {
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
-    setUserId(storedUserId);
+    setUserId(JSON.parse(storedUserId));
   }, []);
-
-  const cleanedUserId = JSON.parse(userId);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -71,6 +97,8 @@ const VolunteeringRegister = () => {
   });
 
   const [createVolunteer, { loading, error, data }] = useMutation(CREATE_VOLUNTEER);
+  const [generateRecommendation] = useMutation(GENERATE_RECOMMENDATION);
+  const [addNotification] = useMutation(CREATE_USER_NOTIFICATION);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,10 +122,10 @@ const VolunteeringRegister = () => {
     }
   
     try {
-      await createVolunteer({
+      const { data: volunteerData } = await createVolunteer({
         variables: {
           title: formData.title,
-          organization: "3273ed1f7a986f3a4e705f7c",
+          organization: organizationId,
           date_start: new Date(formData.date_start).toISOString(),
           date_end: new Date(formData.date_end).toISOString(),
           location: formData.location,
@@ -106,7 +134,31 @@ const VolunteeringRegister = () => {
           tags: formData.tags,
         },
       });
-      alert("¡Voluntariado creado con éxito!");
+
+      const volunteeringId = volunteerData.createVolunteer.id;
+
+      const { data: recommendationData } = await generateRecommendation({
+        variables: { volunteeringId },
+      });
+
+      const recommendedUsers = recommendationData.generateUserRecommendation.lines.map(
+        (line) => line.user.id
+      );
+
+      const notifications = recommendedUsers.slice(0, 5).map((userId) => {
+        return addNotification({
+          variables: {
+            idUsuario: userId,
+            categoria: "Voluntariado",
+            mensaje: `Se ha creado un nuevo voluntariado que puede interesarte: ${formData.title}`,
+          },
+        });
+      });
+
+      await Promise.all(notifications);
+
+      alert("¡Voluntariado creado, recomendaciones generadas y notificaciones enviadas con éxito!");
+
     } catch (err) {
       console.error(err);
       alert("Hubo un error al crear el voluntariado.");
