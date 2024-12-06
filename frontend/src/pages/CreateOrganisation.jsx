@@ -66,7 +66,7 @@ const CreateOrganisation = () => {
       });
 
       console.log("Organización creada con éxito:", data.createOrganization);
-      navigate("/profile-organisation"); // Cambia la ruta según tu sistema
+      navigate(`/${data.createOrganization.id}/profile-organization`); 
     } catch (e) {
       setError2("Error al crear la organización: " + e.message);
     }

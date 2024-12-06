@@ -81,8 +81,14 @@ const VolunteeringManagement = () => {
       <div className="p-4 flex items-center">
         <h1 className="text-3xl">Mis Voluntariados Creados</h1>
 				<button
+					onClick={() => navigate(`/${organizationId}/profile-organization`)}
+					className="ml-auto text-white bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 mx-3"
+					>
+					Volver al Perfil Organizador
+				</button>
+				<button
 					onClick={() => navigate("/dashboard-volunteering")}
-					className="ml-auto text-white bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2"
+					className="ml-end text-white bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2"
 					>
 					Ver Dashboards
 				</button>

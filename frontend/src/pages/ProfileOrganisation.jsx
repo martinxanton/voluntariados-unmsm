@@ -2,6 +2,7 @@ import DetailsColumn from "../components/DetailsColumn";
 import AuthButton from "../components/AuthButton";
 import React, { useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
+import { useNavigate, useParams } from "react-router-dom";
 
 const GET_ORGANIZATION_BY_ID = gql`
   query getOrganizationById($id: ID!) {
@@ -21,8 +22,8 @@ const GET_ORGANIZATION_BY_ID = gql`
 `;
 
 const ProfileOrganisation = () => {
-  const organizationId = "67527ef4b1e7c6ab6d928b12"; // ID de prueba
-  localStorage.setItem("organizationId", organizationId);
+	const { organizationId } = useParams();
+  console.log(organizationId);
 
   const { loading, error, data } = useQuery(GET_ORGANIZATION_BY_ID, {
     variables: { id: organizationId },
@@ -50,30 +51,42 @@ const ProfileOrganisation = () => {
           </h1>
 
           {/* Organization Details */}
-          <div className="w-full mt-6 flex flex-col gap-6">
-            <DetailsColumn
-              details={[
-                { title: "Correo Electrónico", value: email },
-                { title: "Teléfono", value: phone || "No especificado" },
-              ]}
-            />
-            <DetailsColumn
-              details={[
-                { title: "Dirección", value: address || "No especificada" },
-                {
-                  title: "Administrador",
-                  value: `${adminId.username} (${adminId.email})`,
-                },
-              ]}
-            />
+          <div className="w-full mt-6 flex flex-col justify-center gap-2">
+            <div className="w-full flex sm:flex-row xs:flex-col gap-2 justify-center">
+              <DetailsColumn
+                details={[
+                  { title: "Correo Electrónico", value: email },
+                  { title: "Teléfono", value: phone || "No especificado" },
+                ]}
+              />
+              <DetailsColumn
+                details={[
+                  { title: "Dirección", value: address || "No especificada" },
+                  {
+                    title: "Administrador",
+                    value: `${adminId.username} (${adminId.email})`,
+                  },
+                ]}
+              />
+            </div>
           </div>
 
           {/* Buttons */}
           <div className="flex justify-center space-x-4 mt-6">
             <AuthButton
+              text="Volver a mi perfil"
+              className="max-w-xs"
+              to={"/profile-user"}
+            />
+            <AuthButton
+              text="Gestionar Voluntariados"
+              className="max-w-xs"
+              to={`/${organizationId}/management`}
+            />
+            <AuthButton
               text="Editar Organización"
               className="max-w-xs"
-              to={`/edit-organisation/${organizationId}`}
+              to={`/${organizationId}/edit-organization`}
             />
           </div>
           
