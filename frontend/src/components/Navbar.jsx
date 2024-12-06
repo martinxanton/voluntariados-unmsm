@@ -2,13 +2,36 @@ import ThemeController from "./ThemeController";
 import Notification from "./Notification";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import "react-material-symbols/outlined";
+import { MaterialSymbol } from "react-material-symbols";
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+
+const GET_USER_NOTIFICATION = gql`
+  query getNotificationsByUserId($idUsuario: ID!) {
+    getNotificationsByUserId(idUsuario: $idUsuario) {
+      id
+      categoria
+      mensaje
+      fecha
+    }
+  }
+`;
 
 const Navbar = () => {
-  // obtener Token de localstorage
-
   const navigate = useNavigate();
-
   const [userId, setUserId] = useState(null);
+  const [notificationsCount, setNotificationsCount] = useState(0);
+
+  const { data } = useQuery(GET_USER_NOTIFICATION, {
+    variables: { idUsuario: userId },
+  });
+  
+  useEffect(() => {
+    if (data) {
+      setNotificationsCount(data.getNotificationsByUserId.length);
+    }
+  }, [data]);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -25,6 +48,8 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     navigate("/");
+    //RELOAD PAGE
+    window.location.reload();
   };
   return (
     <div className="navbar bg-base-100 w-full shadow-md">
@@ -52,13 +77,13 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
             <li>
-              <a>Homepage</a>
+              <Link to="/search">Buscar voluntariados</Link>
             </li>
             <li>
-              <a>Portfolio</a>
+              <Link to="/register">Registrarse</Link>
             </li>
             <li>
-              <a>About</a>
+              <Link to="/login">Iniciar sesión</Link>
             </li>
           </ul>
         </div>
@@ -73,24 +98,37 @@ const Navbar = () => {
           />
           GoSanMarcos
         </Link>
+        <div className="lg:flex hidden pl-4">
+          <ThemeController />
+        </div>
       </div>
-
       {userId ? (
-        <div className="navbar-end gap-5">
+        <div className="navbar-end gap-6 flex items-center">
           <ul className="menu menu-horizontal px-1 gap-2 hidden md:flex">
             <li>
-              <a onClick={toggleModal} className="cursor-pointer">
-                Notificaciones
-              </a>
+              <Link to="/search">Buscar voluntariados</Link>
             </li>
-            <ThemeController />
           </ul>
-          {isModalOpen && (
-            <Notification
-              closeModal={() => setIsModalOpen(false)}
-              userId={userId}
+          <div className="indicator">
+            <span className="indicator-item badge badge-primary h-4 text-xs">
+              {notificationsCount}
+            </span>
+            <MaterialSymbol
+              icon="notifications"
+              size={26}
+              fill
+              grade={-25}
+              color="text-primary"
+              onClick={toggleModal}
+              className="cursor-pointer"
             />
-          )}
+            {isModalOpen && (
+              <Notification
+                closeModal={() => setIsModalOpen(false)}
+                userId={userId}
+              />
+            )}
+          </div>
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
@@ -109,7 +147,7 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
               <li>
-                <a href="/profile-user">Perfil</a>
+                <Link to="/profile-user">Perfil</Link>
               </li>
               <li>
                 <a onClick={handleLogout}>Cerrar Sesión</a>
@@ -119,14 +157,14 @@ const Navbar = () => {
         </div>
       ) : (
         <div className="navbar-end gap-5">
-          <ul className="menu menu-horizontal px-1 gap-2 hidden md:flex">
-            <ThemeController />
-          </ul>
           <div className="navbar-end flex gap-5">
-            <Link to="/register" className="btn btn-outline btn-primary flex-1">
+            <Link
+              to="/register"
+              className="btn btn-outline btn-primary flex-1 hidden md:flex"
+            >
               Registrarse
             </Link>
-            <Link to="/login" className="btn btn-primary flex-1">
+            <Link to="/login" className="btn btn-primary flex-1 hidden md:flex">
               Iniciar Sesión
             </Link>
           </div>
