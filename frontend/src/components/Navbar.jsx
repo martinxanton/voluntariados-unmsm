@@ -1,8 +1,21 @@
 import ThemeController from "./ThemeController";
+import Notification from "./Notification";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
   // obtner Token de localstorage
-  const userId = localStorage.getItem("userId");
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    setUserId(JSON.parse(storedUserId));
+  }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -62,33 +75,24 @@ const Navbar = () => {
           GoSanMarcos
         </a>
       </div>
-      <div className="navbar-end gap-5">
-        <ul className="menu menu-horizontal px-1 gap-2 hidden md:flex">
-          {/* Navbar items 
-          <li>
-            <a>Item 1</a>
-          </li>
-          <li>
-            <details>
-              <summary>Parent</summary>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </details>
-          </li>
-          <li>
-            <a>Item 3</a>
-          </li>
-          */}
-          <ThemeController />
-          
-        </ul>
+      
+        
         {userId ? (
+          <div className="navbar-end gap-5">
+          <ul className="menu menu-horizontal px-1 gap-2 hidden md:flex">
+            <li>
+              <a onClick={toggleModal} className="cursor-pointer">
+                Notificaciones
+              </a>
+            </li>
+            <ThemeController />
+          </ul>
+          {isModalOpen && (
+            <Notification
+              closeModal={() => setIsModalOpen(false)}
+              userId={userId}
+            />
+          )}
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
@@ -114,7 +118,12 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
+          </div>
         ) : (
+          <div className="navbar-end gap-5"><ul className="menu menu-horizontal px-1 gap-2 hidden md:flex">
+          
+          <ThemeController />
+        </ul>
           <div className="navbar-end flex gap-5">
             <a className="btn btn-outline btn-primary flex-1" href="/register">
               Registrarse
@@ -123,8 +132,8 @@ const Navbar = () => {
               Iniciar Sesión
             </a>
           </div>
-        )}
       </div>
+        )}
     </div>
   );
 };
