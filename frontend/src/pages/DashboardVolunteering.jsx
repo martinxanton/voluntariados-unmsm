@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useQuery, useLazyQuery, gql } from "@apollo/client";
+import { useQuery, useLazyQuery, gql , useMutation} from "@apollo/client";
 import SidebarDashboard from "../components/SidebarDashboard";
 import { Bar, Pie } from "react-chartjs-2";
 import {
@@ -68,6 +68,7 @@ const GET_VOLUNTEERS_BY_ORGANIZATION = gql`
   }
 `;
 
+
 const GET_ACTIVITIES_BY_VOLUNTEER = gql`
   query getActivitiesByVolunteer($id: ID!) {
     getActivitiesByVolunteer(id: $id) {
@@ -78,12 +79,78 @@ const GET_ACTIVITIES_BY_VOLUNTEER = gql`
   }
 `;
 
+const APPROVE_USER = gql`
+  mutation approveUser($volunteerId: ID!, $userId: ID!) {
+    approveUser(volunteerId: $volunteerId, userId: $userId) {
+      id
+      title
+      users {
+        userId {
+          id
+          nombre
+          apellido
+        }
+        approved
+      }
+    }
+  }
+`;
+
+
+
+
+
 const DashboardVolunteering = () => {
   const [selectedProgram, setSelectedProgram] = useState("all");
   const [selectedOrganization, setSelectedOrganization] = useState("");
   const [volunteersByOrg, setVolunteersByOrg] = useState([]);
   const [filteredVolunteers, setFilteredVolunteers] = useState([]);
   const [activities, setActivities] = useState([]);
+  const [selectedParticipantProgram, setSelectedParticipantProgram] = useState("");
+const [pendingUsers, setPendingUsers] = useState([]);
+
+const fetchPendingUsers = async (programId) => {
+  try {
+    const { data: usersData } = await getUsersByVolunteer({
+      variables: { id: programId },
+    });
+
+    if (usersData?.getUsersByVolunteer) {
+      // Filtrar los usuarios que no están aprobados
+      const unapprovedUsers = usersData.getUsersByVolunteer.filter(
+        (user) => !user.approved
+      );
+
+      setPendingUsers(unapprovedUsers);
+    }
+  } catch (error) {
+    console.error("Error al obtener usuarios pendientes:", error);
+  }
+};
+
+// Función para manejar la selección del programa
+const handleParticipantProgramSelect = (programId) => {
+  setSelectedParticipantProgram(programId);
+  if (programId) fetchPendingUsers(programId);
+};
+
+
+const [approveUser] = useMutation(APPROVE_USER);
+
+const handleApproveUser = async (userId) => {
+  try {
+    await approveUser({
+      variables: { volunteerId: selectedParticipantProgram, userId },
+    });
+
+    // Eliminar el usuario aprobado de la lista local
+    setPendingUsers((prevUsers) =>
+      prevUsers.filter((user) => user.userId.id !== userId)
+    );
+  } catch (error) {
+    console.error("Error al aprobar usuario:", error);
+  }
+};
 
   const [totals, setTotals] = useState({
     users: 0, // Usuarios aprobados
@@ -420,7 +487,7 @@ const DashboardVolunteering = () => {
         {activeSection === "volunteers" && (
           <div>
             <h2 className="text-2xl font-bold p-4 bg-blue-600 text-white rounded-t-lg">
-              Voluntarios
+              Voluntarios por programa
             </h2>
             <div className="p-4 bg-white rounded shadow">
               <p className="mt-2 text-gray-500">
@@ -493,6 +560,70 @@ const DashboardVolunteering = () => {
             </div>
           </div>
         )}
+{activeSection === "Participants" && (
+  <div>
+    <h2 className="text-2xl font-bold p-4 bg-blue-600 text-white rounded-t-lg">
+      Participantes
+    </h2>
+    <div className="p-4 bg-white shadow rounded">
+      <label
+        htmlFor="participantProgramFilter"
+        className="block text-sm font-medium text-gray-700 pb-2"
+      >
+        Filtrar por programa:
+      </label>
+      <select
+        id="participantProgramFilter"
+        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        value={selectedParticipantProgram}
+        onChange={(e) => handleParticipantProgramSelect(e.target.value)}
+      >
+        <option value="">Seleccione un voluntariado</option>
+        {volunteersData.getVolunteers.map((program) => (
+          <option key={program.id} value={program.id}>
+            {program.title}
+          </option>
+        ))}
+      </select>
+
+      {/* Lista de usuarios pendientes */}
+      {pendingUsers.length > 0 ? (
+        <table className="min-w-full mt-4 bg-white border">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border">Nombre</th>
+              <th className="py-2 px-4 border">Apellido</th>
+              <th className="py-2 px-4 border">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pendingUsers.map((user) => (
+              <tr key={user.userId.id}>
+                <td className="py-2 px-4 border">{user.userId.nombre}</td>
+                <td className="py-2 px-4 border">{user.userId.apellido}</td>
+                <td className="py-2 px-4 border">
+                  <button
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    onClick={() => handleApproveUser(user.userId.id)}
+                  >
+                    Aprobar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="mt-4 text-gray-500">
+          {selectedParticipantProgram
+            ? "No hay usuarios pendientes de aprobación para este programa."
+            : "Seleccione un programa para ver los usuarios pendientes."}
+        </p>
+      )}
+    </div>
+  </div>
+)}
+
         {activeSection === "activities" && (
           <div>
             <h2 className="text-2xl font-bold p-4 bg-blue-600 text-white rounded-t-lg">

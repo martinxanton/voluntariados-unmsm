@@ -32,7 +32,14 @@ const SidebarDashboard = ({ setActiveSection }) => {
                 Voluntariados
               </button>
             </li>
-            <li></li>
+            <li>
+              <button
+                onClick={() => setActiveSection("Participants")}
+                className="block w-full text-left py-2 px-4 hover:bg-gray-700 rounded transition"
+              >
+                Participantes
+              </button>
+            </li>
             <button
               onClick={() => setActiveSection("activities")}
               className="block w-full text-left py-2 px-4 hover:bg-gray-700 rounded transition"
