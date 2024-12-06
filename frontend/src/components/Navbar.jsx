@@ -1,14 +1,18 @@
 import ThemeController from "./ThemeController";
 import Notification from "./Notification";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  // obtner Token de localstorage
+  // obtener Token de localstorage
+
+  const navigate = useNavigate();
+
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
-    setUserId(JSON.parse(storedUserId));
+    const userId = localStorage.getItem("userId");
+    setUserId(userId);
   }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,13 +24,8 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    window.location.href = "/search";
+    navigate("/");
   };
-
-  const onInitPage = () => {
-    window.location.href = "/";
-  };
-
   return (
     <div className="navbar bg-base-100 w-full shadow-md">
       {/* Navbar start */}
@@ -66,19 +65,18 @@ const Navbar = () => {
       </div>
       {/* Navbar fullscreen */}
       <div className="navbar-start flex justify-center md:justify-start">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/3/3a/UNMSM_coatofarms_seal.svg"
-          alt="logo"
-          className="w-8 h-auto"
-        />
-        <a className="btn btn-ghost text-xl" onClick={onInitPage}>
+        <Link className="btn btn-ghost text-xl flex gap-4" to="/">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/3/3a/UNMSM_coatofarms_seal.svg"
+            alt="logo"
+            className="w-8 h-auto"
+          />
           GoSanMarcos
-        </a>
+        </Link>
       </div>
-      
-        
-        {userId ? (
-          <div className="navbar-end gap-5">
+
+      {userId ? (
+        <div className="navbar-end gap-5">
           <ul className="menu menu-horizontal px-1 gap-2 hidden md:flex">
             <li>
               <a onClick={toggleModal} className="cursor-pointer">
@@ -118,22 +116,22 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
-          </div>
-        ) : (
-          <div className="navbar-end gap-5"><ul className="menu menu-horizontal px-1 gap-2 hidden md:flex">
-          
-          <ThemeController />
-        </ul>
+        </div>
+      ) : (
+        <div className="navbar-end gap-5">
+          <ul className="menu menu-horizontal px-1 gap-2 hidden md:flex">
+            <ThemeController />
+          </ul>
           <div className="navbar-end flex gap-5">
-            <a className="btn btn-outline btn-primary flex-1" href="/register">
+            <Link to="/register" className="btn btn-outline btn-primary flex-1">
               Registrarse
-            </a>
-            <a className="btn btn-primary flex-1" href="/login">
+            </Link>
+            <Link to="/login" className="btn btn-primary flex-1">
               Iniciar Sesión
-            </a>
+            </Link>
           </div>
-      </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };
