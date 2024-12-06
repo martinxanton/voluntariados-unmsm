@@ -1,22 +1,21 @@
-
-import { gql, useMutation  } from "@apollo/client";
+import { gql, useMutation, useQuery  } from "@apollo/client";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const CREATE_VOLUNTEER = gql`
-  mutation createVolunteer(
-    $title: String!
-    $organization: ID!
-    $date_start: String!
-    $date_end: String!
-    $location: String!
-    $totalVac: Int!
-    $category: String!
-    $tags: [String!]!
+const UPDATE_VOLUNTEER = gql`
+  mutation updateVolunteer(
+    $id: ID!
+    $title: String
+    $date_start: String
+    $date_end: String
+    $location: String
+    $totalVac: Int
+    $category: String
+    $tags: [String]
   ) {
-    createVolunteer(
+    updateVolunteer(
+      id: $id
       title: $title
-      organization: $organization
       date_start: $date_start
       date_end: $date_end
       location: $location
@@ -26,6 +25,21 @@ const CREATE_VOLUNTEER = gql`
     ) {
       id
       title
+    }
+  }
+`;
+
+const GET_VOLUNTEER_BY_ID = gql`
+  query getVolunteerById($id: ID!) {
+    getVolunteerById(id: $id) {
+      id
+      title
+      date_start
+      date_end
+      location
+      totalVac
+      category
+      tags
     }
   }
 `;
@@ -76,20 +90,29 @@ const CategoryList = [
   "Ayuda Humanitaria",
 ];
 
-const VolunteeringRegister = () => {
-	const { organizationId } = useParams();
-	const navigate = useNavigate();
+const VolunteeringEdit = () => {
+  const { organizationId, volunteerId } = useParams();
+  const navigate = useNavigate();
+  
+  const { data, loading, error } = useQuery(GET_VOLUNTEER_BY_ID, {
+    variables: { id: volunteerId },
+    onCompleted: (data) => {
+      const volunteer = data.getVolunteerById;
 
-  const [userId, setUserId] = useState(null);
-
-  useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
-    setUserId(JSON.parse(storedUserId));
-  }, []);
+      setFormData({
+        title: volunteer.title,
+        date_start: new Date(parseInt(volunteer.date_start)).toISOString().split("T")[0],
+        date_end: new Date(parseInt(volunteer.date_end)).toISOString().split("T")[0],
+        location: volunteer.location,
+        totalVac: volunteer.totalVac,
+        category: volunteer.category,
+        tags: volunteer.tags || [],
+      });
+    },
+  });
 
   const [formData, setFormData] = useState({
     title: "",
-    organization: "",
     date_start: "",
     date_end: "",
     location: "",
@@ -97,10 +120,6 @@ const VolunteeringRegister = () => {
     category: "",
     tags: [],
   });
-
-  const [createVolunteer, { loading, error, data }] = useMutation(CREATE_VOLUNTEER);
-  const [generateRecommendation] = useMutation(GENERATE_RECOMMENDATION);
-  const [addNotification] = useMutation(CREATE_USER_NOTIFICATION);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,33 +130,40 @@ const VolunteeringRegister = () => {
   };
 
   const handleTagsChange = (e) => {
-    const value = e.target.value;
-    setFormData({ ...formData, tags: value.split(",").map((tag) => tag.trim()) });
+    setFormData({
+      ...formData,
+      tags: e.target.value.split(",").map((tag) => tag.trim()),
+    });
   };
+
+  const [generateRecommendation] = useMutation(GENERATE_RECOMMENDATION);
+  const [addNotification] = useMutation(CREATE_USER_NOTIFICATION);
+
+  const [updateVolunteer, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_VOLUNTEER);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
     if (!formData.date_start || !formData.date_end) {
       alert("Por favor, selecciona ambas fechas.");
-      return;
+      return; 
     }
   
     try {
-      const { data: volunteerData } = await createVolunteer({
+      const { data: volunteerData } = await updateVolunteer({
         variables: {
+          id: volunteerId,
           title: formData.title,
-          organization: organizationId,
-          date_start: new Date(formData.date_start).toISOString(),
-          date_end: new Date(formData.date_end).toISOString(),
+          date_start: new Date(formData.date_start).toISOString(), 
+          date_end: new Date(formData.date_end).toISOString(),     
           location: formData.location,
           totalVac: formData.totalVac,
           category: formData.category,
           tags: formData.tags,
         },
-      });
+      });     
 
-      const volunteeringId = volunteerData.createVolunteer.id;
+      const volunteeringId = volunteerData.updateVolunteer.id;
 
       const { data: recommendationData } = await generateRecommendation({
         variables: { volunteeringId },
@@ -152,25 +178,28 @@ const VolunteeringRegister = () => {
           variables: {
             idUsuario: userId,
             categoria: "Voluntariado",
-            mensaje: `Se ha creado un nuevo voluntariado que puede interesarte: ${formData.title}`,
+            mensaje: `Se ha actualizado un voluntariado que puede interesarte: ${formData.title}`,
           },
         });
       });
 
       await Promise.all(notifications);
 
-      alert("¡Voluntariado creado, recomendaciones generadas y notificaciones enviadas con éxito!");
+      alert("¡Voluntariado actualizado!");
       navigate(`/${organizationId}/management`, { state: { refresh: true } });
     } catch (err) {
       console.error(err);
-      alert("Hubo un error al crear el voluntariado.");
+      alert("Hubo un error al actualizar el voluntariado.");
     }
   };
   
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>Error al cargar los datos: {error.message}</p>;
+
   return (
     <div className="container mx-auto p-4">
       {/* Page Title */}
-      <h1 className="text-3xl font-bold text-[black] mb-6">Crear Voluntariado</h1>
+      <h1 className="text-3xl font-bold text-[black] mb-6">Editar Voluntariado</h1>
 
       <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
         {/* Title */}
@@ -263,7 +292,7 @@ const VolunteeringRegister = () => {
               name="start-date"
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#8c0327] focus:ring-[#8c0327] focus:ring-opacity-50 p-2"
               style={{ backgroundColor: "#f6f6f6" }}
-              value={formData.startDate}
+              value={formData.date_start}
               onChange={(e) => setFormData({ ...formData, date_start: e.target.value })}
             />
           </div>
@@ -281,7 +310,7 @@ const VolunteeringRegister = () => {
               name="end-date"
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#8c0327] focus:ring-[#8c0327] focus:ring-opacity-50 p-2"
               style={{ backgroundColor: "#f6f6f6" }}
-              value={formData.endDate}
+              value={formData.date_end}
               onChange={(e) => setFormData({ ...formData, date_end: e.target.value })}
             />
           </div>
@@ -292,14 +321,13 @@ const VolunteeringRegister = () => {
             type="submit"
             className="block w-full bg-[#8c0327] hover:bg-[#6b0220] text-white font-bold py-3 px-4 rounded-full"
           >
-            {loading ? "Creando..." : "CREAR VOLUNTARIADO"}
+            {updateLoading ? "Actualizando..." : "ACTUALIZAR VOLUNTARIADO"}
           </button>
         </div>
-        {error && <p className="text-red-500 text-center">Error: {error.message}</p>}
-        {data && <p className="text-green-500 text-center">¡Voluntariado creado con éxito!</p>}
+        {updateError && <p className="text-red-500 text-center">Error: {updateError.message}</p>}
       </form>
     </div>
   );
 };
 
-export default VolunteeringRegister;
+export default VolunteeringEdit;

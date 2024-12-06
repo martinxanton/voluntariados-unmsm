@@ -12,6 +12,8 @@ import VolunteeringDetails from "../pages/VolunteeringDetails";
 import VolunteeringRegister from "../pages/VolunteeringRegister";
 import VolunteeringTracking from "../pages/VolunteeringTracking";
 import DashboardVolunteering from "../pages/DashboardVolunteering";
+import VolunteeringManagement from "../pages/VolunteeringManagement";
+import VolunteeringEdit from "../pages/VolunteeringEdit";
 import ProtectedRoute from "./protectedRoute";
 
 const AppRoutes = () => {
@@ -67,9 +69,19 @@ const AppRoutes = () => {
           <VolunteeringDetails />
         </ProtectedRoute>
       } />
-      <Route path="/volunteer-register" element={
+      <Route path="/:organizationId/volunteer-register" element={
         <ProtectedRoute>
           <VolunteeringRegister />
+        </ProtectedRoute>
+      } />
+      <Route path="/:organizationId/management" element={
+        <ProtectedRoute>
+          <VolunteeringManagement />
+        </ProtectedRoute>
+      } />
+      <Route path="/:organizationId/volunteers/:volunteerId/edit" element={
+        <ProtectedRoute>
+          <VolunteeringEdit />
         </ProtectedRoute>
       } />
       <Route path="/:id/tracking" element={
