@@ -33,18 +33,16 @@ const Login = () => {
     try {
       const { data } = await loginUser({ variables: { email, password } });
       console.log("Login successful");
-
       localStorage.setItem("token", data.loginUser.token);
-      localStorage.setItem("userId", JSON.stringify(data.loginUser.user.id));
-      
-      navigate("../search");
+      localStorage.setItem("userId", data.loginUser.user.id);
+      navigate("/search");
     } catch (e) {
       console.error("Login failed:", e.message);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 text-black">
+    <div className="min-h-screen bg-gray-200 text-black">
       <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
         <div className="max-w-md w-full">
           <div className="p-8 rounded-2xl bg-white shadow">
