@@ -88,7 +88,7 @@ const LandingPage = () => {
     <div>
       <div className="carousel w-full">
         <div id="slide1" className="carousel-item relative w-full">
-          <img src="src/assets/Banner.png" className="w-full" />
+          <img src="Banner.png" className="w-full" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
             <a href="#slide4" className="btn btn-circle">
               ❮
@@ -99,7 +99,7 @@ const LandingPage = () => {
           </div>
         </div>
         <div id="slide2" className="carousel-item relative w-full">
-          <img src="src/assets/Banner1.png" className="w-full" />
+          <img src="Banner1.png" className="w-full" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
             <a href="#slide1" className="btn btn-circle">
               ❮
@@ -110,7 +110,7 @@ const LandingPage = () => {
           </div>
         </div>
         <div id="slide3" className="carousel-item relative w-full">
-          <img src="src/assets/Banner.png" className="w-full" />
+          <img src="Banner.png" className="w-full" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
             <a href="#slide2" className="btn btn-circle">
               ❮
@@ -121,7 +121,7 @@ const LandingPage = () => {
           </div>
         </div>
         <div id="slide4" className="carousel-item relative w-full">
-          <img src="src/assets/Banner1.png" className="w-full" />
+          <img src="Banner1.png" className="w-full" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
             <a href="#slide3" className="btn btn-circle">
               ❮
@@ -165,7 +165,7 @@ const LandingPage = () => {
       <div className=" bg-base-200 min-h-56-screen py-36  flex justify-center ">
         <div className="hero-content flex-col lg:flex-row">
           <img
-            src="src/assets/imageVolunteer.jpg"
+            src="imageVolunteer.jpg"
             className="max-w-sm rounded-lg shadow-2xl"
           />
           <div className="py-8 mx-16">
@@ -190,27 +190,27 @@ const LandingPage = () => {
           <CardInfo
             title="Sencilla y Amigable"
             description="La plataforma es fácil de usar, rápida e intuitiva."
-            imagePath="src/assets/beneficio1.svg"
+            imagePath="beneficio1.svg"
           />
           {/* Card 2 */}
           <CardInfo
             title="Confiable"
             description="Los programas no tienen fines de lucro."
-            imagePath="src/assets/beneficio2.svg"
+            imagePath="beneficio2.svg"
           />
 
           {/* Card 3 */}
           <CardInfo
             title="Diversidad de causas"
             description="Tienes a tu disposición proyectos para participar."
-            imagePath="src/assets/beneficio3.svg"
+            imagePath="beneficio3.svg"
           />
 
           {/* Card 4 */}
           <CardInfo
             title="Continuidad"
             description="Damos seguimiento del proyecto para umentar la transparencia."
-            imagePath="src/assets/beneficio4.svg"
+            imagePath="beneficio4.svg"
           />
         </div>
       </div>
@@ -220,7 +220,7 @@ const LandingPage = () => {
           <div className="max-w-3xl mx-auto">
             {/* Imagen justo encima del texto */}
             <img
-              src="src/assets/novedad.svg"
+              src="novedad.svg"
               alt="Imagen destacada"
               className="mx-auto mb-4 w-40 h-40"
             />
