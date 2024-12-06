@@ -5,6 +5,9 @@ import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import ProfileUser from "../pages/ProfileUser";
 import EditProfile from "../pages/EditProfile";
+import CreateOrganisation from "../pages/CreateOrganisation";
+import ProfileOrganisation from "../pages/ProfileOrganisation";
+import EditOrganisation from "../pages/EditOrganisation";
 import VolunteeringDetails from "../pages/VolunteeringDetails";
 import VolunteeringRegister from "../pages/VolunteeringRegister";
 import VolunteeringTracking from "../pages/VolunteeringTracking";
@@ -34,6 +37,28 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/create-organisation"
+        element={
+            <CreateOrganisation/>
+        }
+      />
+
+      <Route
+        path="/profile-organisation"
+        element={
+            <ProfileOrganisation/>
+        }
+      />
+
+      <Route
+        path="/edit-organisation"
+        element={
+            <EditOrganisation/>
+        }
+      />
+      
 
       {/* Estos links son dinamicos pero se usaran con estas url para seguir diseñando las interfaces */}
 
