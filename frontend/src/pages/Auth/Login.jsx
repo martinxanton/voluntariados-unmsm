@@ -23,8 +23,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("userId");
-    if (token) {
+    if (localStorage.getItem("token")) {
       navigate("/search");
     }
   }, [navigate]);

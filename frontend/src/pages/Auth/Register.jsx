@@ -41,8 +41,7 @@ const Register = () => {
   const [error2, setError2] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("userId");
-    if (token) {
+    if (localStorage.getItem("token")) {
       navigate("/search");
     }
   }, [navigate]);

@@ -14,7 +14,7 @@ const client = new ApolloClient({
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/voluntariados-unmsm/" >
     <ApolloProvider client={client}>
       <App />
     </ApolloProvider>
